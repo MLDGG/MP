@@ -15,6 +15,62 @@
 
 #include "defs.h"
 
+
+// PROGRAM FLOW
+
+// displayMainMenu()
+startNewGame()
+displayTopPlayers()
+displaySettings()
+TerminateProgram()
+
+// Game Proper
+// getNumberOfPlayers()
+getUsername()
+shuffleDeck()
+dealCards()
+trytoScore()
+trytoSteal()
+displayGameResults()
+displayStatistics()
+
+//settings
+setWinningPoints()
+setShuffleSeed()
+
+
+
+void displayMainMenu()
+{
+  printf("Main Menu\n\t [1] New Game \n\t [2] Top Players \n\t [3] Settings \n\t [0] Exit\n");
+  printf("Enter option: ");
+}
+
+int getNumberOfPlayers()
+{
+  int nPlayers;
+  do
+  {
+    printf("How many players?(3-6): ");
+    scanf("%d", &nPlayers);
+  } while (nPlayers < 3 || nPlayers > 6);
+  return nPlayers;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /******************************************************************************
  * NOTE: These functions are placed here in helpers_1.c to demonstrate code
  * modularization across multiple files. You may move them to different files
