@@ -37,4 +37,18 @@ typedef struct
   int year;  // The year
 } Date;
 
+struct Card
+{
+  char front; // front of card has a single color
+  char back[4]; // back shows 3 different color
+  int points; // point value of card
+};
+
+struct Player
+{
+  char username[37]; // name of player, max 36 characters + null terminator
+  int score; 
+  int numWins;
+};
+
 #endif // DEFS_H; Include this to prevent redefinition error
