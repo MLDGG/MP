@@ -46,12 +46,14 @@ int main()
 	  break;
 	
 	case 1:
-	nPlayers = getNumberOfPlayers();
-	displayPlayers(P, nPlayers);
-  getUsername(&P[nPlayers-1]);
-  printf("Player %d: %s\n", nPlayers, P[nPlayers-1].username);
-  loadDeck(deck);
-  for(int i = 0; i < 75; i++)
+	nPlayers = getNumberOfPlayers(); // get number of players
+	displayPlayers(P, nPlayers); // display players
+  getUsername(&P[nPlayers-1]); // get username of new player
+  printf("Player %d: %s\n", nPlayers, P[nPlayers-1].username); // display new player (for checking only)
+  loadDeck(deck); // load deck from mantis.txt
+
+  // for checking if deck loaded correctly
+  for(int i = 0; i < 84; i++)
   {
     printf("%c | %s %d\n", deck[i].front, deck[i].back, deck[i].points);
   }
