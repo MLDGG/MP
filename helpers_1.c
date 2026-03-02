@@ -224,6 +224,19 @@ int checkIfColorExist(struct Player player[], struct Card drawnCard, int playerI
   return bool;
 }
 
+int scoreOrSteal(struct Player player[], struct Card drawnCard, int playerIndex)
+{
+  int choice;
+  do
+  {
+    printf("Player %d, what would you like to do?\n", playerIndex+1);
+    printf("\t[1] Score\n \t[2] Steal\n");
+    printf("Enter option: ");
+    scanf("%d", &choice);
+  } while (choice < 1 || choice > 2);
+  return choice;
+}
+
 void tryToScore(struct Player player[], struct Card drawnCard, int playerIndex)
 {
   int colorIndex;

@@ -25,6 +25,7 @@ int main()
 
   int nChoice;
   int nPlayers;
+  int nScoreOrSteal;
   struct Player P[6];
   struct Deck deck;
   struct Card drawnCard;
@@ -51,40 +52,49 @@ int main()
   printf("Player %d: %s\n", nPlayers, P[nPlayers-1].username); // display new player (for checking only)
   deck.nCards = loadDeck(&deck); // load deck from mantis.txt
 
-  // for checking if deck loaded correctly
-  for(int i = 0; i < deck.nCards; i++)
-  {
-    printf("%c %s %d\n", deck.cards[i].front, deck.cards[i].back, deck.cards[i].points);
-  }
+  // // for checking if deck loaded correctly
+  // for(int i = 0; i < deck.nCards; i++)
+  // {
+  //   printf("%c %s %d\n", deck.cards[i].front, deck.cards[i].back, deck.cards[i].points);
+  // }
 
   shuffleDeck(&deck);
 
-    // for checking if deck shuffled correctly
-      printf("shuffled deck:\n");
+  //   // for checking if deck shuffled correctly
+  //     printf("shuffled deck:\n");
 
-    for(int i = 0; i < deck.nCards; i++)
-  {
-    printf("%c | %s %d\n", deck.cards[i].front, deck.cards[i].back, deck.cards[i].points);
-  }
+  //   for(int i = 0; i < deck.nCards; i++)
+  // {
+  //   printf("%c | %s %d\n", deck.cards[i].front, deck.cards[i].back, deck.cards[i].points);
+  // }
 
   displayPlayerCards(P, nPlayers);
   dealTank(P, nPlayers, &deck);
 
-    // for checking if dealt cards  correctly
-    for(int i = 0; i < deck.nCards; i++)
-  {
-    printf("%c | %s %d\n", deck.cards[i].front, deck.cards[i].back, deck.cards[i].points);
-  }
+  //   // for checking if dealt cards  correctly
+  //   for(int i = 0; i < deck.nCards; i++)
+  // {
+  //   printf("%c | %s %d\n", deck.cards[i].front, deck.cards[i].back, deck.cards[i].points);
+  // }
 
 
     printf("After dealing tank:\n");
     displayPlayerCards(P, nPlayers);
 
-  printf("Remaining cards in deck: %d\n", deck.nCards);
+  // printf("Remaining cards in deck: %d\n", deck.nCards);
   drawnCard = drawTopCard(&deck);
-  printf("Top card: %c | %s %d\n", drawnCard.front, drawnCard.back, drawnCard.points);
-  tryToScore(P, drawnCard, 0);
-  displayPlayerCards(P, nPlayers);
+  printf("\nTop Deck: %s (%d cards remaining in deck)", drawnCard.back, deck.nCards);
+  //printf("Top card: %c | %s %d\n", drawnCard.front, drawnCard.back, drawnCard.points);
+  nScoreOrSteal = scoreOrSteal(P, drawnCard, 0);
+  if(nScoreOrSteal == 1)
+  {
+    tryToScore(P, drawnCard, 0);
+    displayPlayerCards(P, nPlayers);
+  }
+  else if(nScoreOrSteal == 2)
+  {
+    /* code */ 
+  }
 
 	break;
 	
