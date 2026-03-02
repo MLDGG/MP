@@ -12,31 +12,36 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
 #include "defs.h"
 
 
 // PROGRAM FLOW
 
-// displayMainMenu()
-startNewGame()
-displayTopPlayers()
-displaySettings()
-TerminateProgram()
+// // displayMainMenu()
+// startNewGame()
+// displayTopPlayers()
+// displaySettings()
+// TerminateProgram()
 
-// Game Proper
-// getNumberOfPlayers()
-getUsername()
-shuffleDeck()
-dealCards()
-trytoScore()
-trytoSteal()
-displayGameResults()
-displayStatistics()
+// loadPlayers()
+// loadDeck()
+// savePlayers()
 
-//settings
-setWinningPoints()
-setShuffleSeed()
+// // Game Proper
+// // getNumberOfPlayers()
+// // getUsername()
+// shuffleDeck()
+// dealCards()
+// trytoScore()
+// trytoSteal()
+// displayGameResults()
+// displayStatistics()
+
+// //settings
+// setWinningPoints()
+// setShuffleSeed()
 
 
 
@@ -45,6 +50,7 @@ void displayMainMenu()
   printf("Main Menu\n\t [1] New Game \n\t [2] Top Players \n\t [3] Settings \n\t [0] Exit\n");
   printf("Enter option: ");
 }
+
 
 int getNumberOfPlayers()
 {
@@ -57,11 +63,45 @@ int getNumberOfPlayers()
   return nPlayers;
 }
 
+void displayPlayers(struct Player P[], int nPlayers)
+{
+	int i;
+	
+	for(i = 0; i < nPlayers-1; i++)
+	{
+		printf("P%d: %s\n", i+1, P[i].username);
+	}
+	
+	printf("P%d: ?\n", i+1);
 
+}
 
+void getUsername(struct Player *pPlayer)
+{
+  char username[37];
+  do
+  {
+    printf("New player username: ");
+    scanf("%s", &username);
+  } while (strlen(username) > 36);
+  strcpy(pPlayer->username, username);
+}
 
+// loadDeck()
+// {
+//   fopen("mantis.txt", "r");
+  
+// }
 
+// shuffleDeck()
+// {
+//   fopen("mantis.txt", "r");
+// }
 
+// startNewGame()
+// {
+//   getNumberOfPlayers();
+// }
 
 
 

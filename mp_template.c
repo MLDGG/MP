@@ -18,93 +18,53 @@
 
 /* ----- function implementations ----- */
 
-/**
- *  Computes the average of the non-negative numbers from a given list of numbers
- *  @param arr The starting address of the array containing the list of numbers
- *  @param arrSize The size of the array
- *  @return The average of the non-negative numbers from the list of numbers
- *  @pre arr can include positive numbers, negative numbers, and zeros
- *  @pre arrSize is the correct size of arr
- */
-float getAverage(int arr[], int arrSize)
-{
-  float average;
-  int sum = 0, n = 0, i;
-
-  for (i = 0; i < arrSize; i++)
-    if (arr[i] >= 0)
-    {
-      sum += arr[i];
-      n++;
-    }
-
-  if (n == 0) // prevent divide by zero
-    average = 0;
-  else
-    average = sum / (float)n;
-
-  return average;
-}
-
 
 
 int main()
 {
-  /* your project code */
 
-  int cChoice;
+  int nChoice;
+  int nPlayers;
+  struct Player P[6];
+  
+  	strcpy(P[0].username, "MLDG");
+	  strcpy(P[1].username, "yatsfr");
+	
 
-  printf("Main Menu\n\t [1] New Game \n\t [2] Top Players \n\t [3] Settings \n\t [0] Exit\n");
 
-  printf("Enter option: ");
+
+  displayMainMenu();
 
   do 
   {
-    scanf("%d", &cChoice);
-  } while (cChoice < 0 || cChoice > 3);
+    scanf("%d", &nChoice);
+  } while (nChoice < 0 || nChoice > 3);
 
-
-  
-
-  // Coordinate pointsArray[ARR_SIZE] = {{1, 1}, {2, 2}, {3, 3}, {4, 4}, {5, 5}};
-  // int currentArrSize = 5;
-
-  // // Sample call of a function from helpers_2.c to initialize random number generator
-  // initRandom();
-
-  // // Sample call of a function from helpers_2.c to get a random seed
-  // int seed = randomInt();
-
-  // // Sample call of a function from helpers_1.c to display initial array
-  // printf("Initial array:\n  ");
-  // displayCoodinates(pointsArray, currentArrSize);
-
-  // printf("----- Different seeds produce different shuffle arrangements -----\n\n");
-
-  // // Sample call of a function from helpers_2.c to shuffle the array
-  // shuffle(pointsArray, currentArrSize, sizeof(Coordinate), seed);
-
-  // // Sample call of a function from helpers_1.c to display shuffled array
-  // printf("Shuffled array (seed: %d)\n  ", seed);
-  // displayCoodinates(pointsArray, currentArrSize);
-
-  // // Shuffle again with a different random seed
-  // seed = randomInt();
-  // shuffle(pointsArray, currentArrSize, sizeof(Coordinate), seed);
-  // printf("Shuffled array (seed: %d)\n  ", seed);
-  // displayCoodinates(pointsArray, currentArrSize);
-
-  // // Providing the same seed produces the same shuffle arrangement
-  // printf("----- Same seed produces the same shuffle arrangement -----\n\n");
-
-  // shuffle(pointsArray, currentArrSize, sizeof(Coordinate), 999);
-  // printf("Shuffled array (seed: 999):\n  ");
-  // displayCoodinates(pointsArray, currentArrSize);
-  // printf("Shuffled array (seed: 999):\n  ");
-  // displayCoodinates(pointsArray, currentArrSize);
+	switch (nChoice)
+	{
+	case 0:
+	  break;
+	
+	case 1:
+	nPlayers = getNumberOfPlayers();
+	displayPlayers(P, nPlayers);
+	break;
+	
+	case 2:
+	  break;
+	
+	case 3:
+	  /* code */ 
+	  break;
+	
+	
+	default:
+	  break;
+	}
 
   return 0;
 }
+
 
 /**
  * This is to certify that this project is my/our own work, based on my/our personal
