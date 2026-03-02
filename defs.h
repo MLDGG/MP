@@ -18,6 +18,7 @@
 #define PI 3.1415
 #define ARR_SIZE 10
 
+
 /**
  * Represents a 2D point
  */
@@ -42,6 +43,12 @@ struct Card
   char front; // front of card has a single color
   char back[4]; // back shows 3 different color
   int points; // point value of card
+};
+
+struct Deck
+{
+  struct Card cards[84]; // Cards in the deck
+  int nCards;     // Number of cards in the deck
 };
 
 struct Player

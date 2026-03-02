@@ -88,7 +88,7 @@ void getUsername(struct Player *pPlayer)
 }
 
 // source: https://www.youtube.com/watch?v=XzRyBwu_h48
-int loadDeck(struct Card deck[])
+int loadDeck(struct Deck *deck)
 {
   FILE *fptr;
   int i = 0;
@@ -100,7 +100,7 @@ int loadDeck(struct Card deck[])
     exit(1);
   }
 
-  while(fscanf(fptr, " %c | %s %d", &deck[i].front, deck[i].back, &deck[i].points) == 3)
+  while(fscanf(fptr, " %c | %s %d", &deck->cards[i].front, deck->cards[i].back, &deck->cards[i].points) == 3)
   {
     i++;
   }
@@ -109,14 +109,16 @@ int loadDeck(struct Card deck[])
   return i;
 }
 
-void shuffleDeck(struct Card deck[])
+void shuffleDeck(struct Deck *deck)
 {
   int seed;
 
   initRandom();
   seed = randomInt();
-  shuffle(deck, 84, sizeof(struct Card), seed);
+  shuffle(&deck->cards, 84, sizeof(struct Card), seed);
 }
+
+
 
 // startNewGame()
 // {

@@ -26,12 +26,11 @@ int main()
   int nChoice;
   int nPlayers;
   struct Player P[6];
-  struct Card deck[84];
-  	strcpy(P[0].username, "MLDG");
-	  strcpy(P[1].username, "yatsfr");
-	
+  struct Deck deck;
 
 
+	strcpy(P[0].username, "MLDG");
+  strcpy(P[1].username, "yatsfr");
 
   displayMainMenu();
 
@@ -50,21 +49,25 @@ int main()
 	displayPlayers(P, nPlayers); // display players
   getUsername(&P[nPlayers-1]); // get username of new player
   printf("Player %d: %s\n", nPlayers, P[nPlayers-1].username); // display new player (for checking only)
-  loadDeck(deck); // load deck from mantis.txt
+  loadDeck(&deck); // load deck from mantis.txt
 
   // for checking if deck loaded correctly
   for(int i = 0; i < 84; i++)
   {
-    printf("%c | %s %d\n", deck[i].front, deck[i].back, deck[i].points);
+    printf("%c %s %d\n", deck.cards[i].front, deck.cards[i].back, deck.cards[i].points);
   }
 
-  shuffleDeck(deck);
+  shuffleDeck(&deck);
+
+    // for checking if deck shuffled correctly
       printf("shuffled deck:\n");
 
     for(int i = 0; i < 84; i++)
   {
-    printf("%c | %s %d\n", deck[i].front, deck[i].back, deck[i].points);
+    printf("%c | %s %d\n", deck.cards[i].front, deck.cards[i].back, deck.cards[i].points);
   }
+
+
 	break;
 	
 	case 2:
