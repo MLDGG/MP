@@ -26,7 +26,7 @@ int main()
   int nChoice;
   int nPlayers;
   struct Player P[6];
-  
+  struct Card deck[84];
   	strcpy(P[0].username, "MLDG");
 	  strcpy(P[1].username, "yatsfr");
 	
@@ -50,6 +50,11 @@ int main()
 	displayPlayers(P, nPlayers);
   getUsername(&P[nPlayers-1]);
   printf("Player %d: %s\n", nPlayers, P[nPlayers-1].username);
+  loadDeck(deck);
+  for(int i = 0; i < 75; i++)
+  {
+    printf("%c | %s %d\n", deck[i].front, deck[i].back, deck[i].points);
+  }
 	break;
 	
 	case 2:

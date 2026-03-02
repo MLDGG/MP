@@ -87,11 +87,27 @@ void getUsername(struct Player *pPlayer)
   strcpy(pPlayer->username, username);
 }
 
-// loadDeck()
-// {
-//   fopen("mantis.txt", "r");
-  
-// }
+// source: https://www.youtube.com/watch?v=XzRyBwu_h48
+int loadDeck(struct Card deck[])
+{
+  FILE *fptr;
+  int i = 0;
+
+  fptr = fopen("mantis.txt", "r");
+  if (fptr == NULL)
+  {
+    printf("Error opening file!\n");
+    exit(1);
+  }
+
+  while(fscanf(fptr, " %c | %s %d", &deck[i].front, deck[i].back, &deck[i].points) == 3)
+  {
+    i++;
+  }
+  fclose(fptr);
+
+  return i;
+}
 
 // shuffleDeck()
 // {
