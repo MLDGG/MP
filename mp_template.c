@@ -48,6 +48,8 @@ int main()
 	case 1:
 	nPlayers = getNumberOfPlayers();
 	displayPlayers(P, nPlayers);
+  getUsername(&P[nPlayers-1]);
+  printf("Player %d: %s\n", nPlayers, P[nPlayers-1].username);
 	break;
 	
 	case 2:
