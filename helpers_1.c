@@ -149,6 +149,51 @@ struct Card drawTopCard(struct Deck *ptrDeck)
   return topCard; // Return the drawn card
 }
 
+struct Player addCardToHand(struct Player player, struct Card drawnCard)
+{
+  switch(drawnCard.front)
+  {
+    case 'R':
+      player.tank[0]++;
+      break;
+    case 'O':
+      player.tank[1]++;
+      break;
+    case 'Y':
+      player.tank[2]++;
+      break;
+    case 'G':
+      player.tank[3]++;
+      break;
+    case 'B':
+      player.tank[4]++;
+      break;
+    case 'I':
+      player.tank[5]++;
+      break;
+    case 'V':
+      player.tank[6]++;
+      break;
+  }
+  return player;
+}
+
+void dealTank(struct Player players[], int nPlayers, struct Deck *ptrDeck)
+{
+  int i;
+  int j;
+  struct Card drawnCard;
+
+  for(i = 0; i < nPlayers; i++)
+  {
+    for( j = 0; j < 4; j++)
+    {
+      drawnCard = drawTopCard(ptrDeck);
+      players[i] = addCardToHand(players[i], drawnCard);
+    }
+  }
+}
+
 
 // startNewGame()
 // {

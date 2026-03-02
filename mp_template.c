@@ -77,9 +77,10 @@ int main()
   // }
   // printf("Top card: %c | %s %d\n", topCard.front, topCard.back, topCard.points);
 
+    dealTank(P, nPlayers, &deck);
+    printf("After dealing tank:\n");
+    displayPlayerCards(P, nPlayers);
 
-
-  
 	break;
 	
 	case 2:
