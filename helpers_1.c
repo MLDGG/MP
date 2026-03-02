@@ -109,10 +109,14 @@ int loadDeck(struct Card deck[])
   return i;
 }
 
-// shuffleDeck()
-// {
-//   fopen("mantis.txt", "r");
-// }
+void shuffleDeck(struct Card deck[])
+{
+  int seed;
+
+  initRandom();
+  seed = randomInt();
+  shuffle(deck, 84, sizeof(struct Card), seed);
+}
 
 // startNewGame()
 // {

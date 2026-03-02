@@ -57,6 +57,14 @@ int main()
   {
     printf("%c | %s %d\n", deck[i].front, deck[i].back, deck[i].points);
   }
+
+  shuffleDeck(deck);
+      printf("shuffled deck:\n");
+
+    for(int i = 0; i < 84; i++)
+  {
+    printf("%c | %s %d\n", deck[i].front, deck[i].back, deck[i].points);
+  }
 	break;
 	
 	case 2:
