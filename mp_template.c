@@ -27,6 +27,7 @@ int main()
   int nPlayers;
   struct Player P[6];
   struct Deck deck;
+  struct Card topCard;
 
 
 
@@ -48,10 +49,10 @@ int main()
 	displayPlayers(P, nPlayers); // display players
   getUsername(&P[nPlayers-1]); // get username of new player
   printf("Player %d: %s\n", nPlayers, P[nPlayers-1].username); // display new player (for checking only)
-  loadDeck(&deck); // load deck from mantis.txt
+  deck.nCards = loadDeck(&deck); // load deck from mantis.txt
 
   // // for checking if deck loaded correctly
-  // for(int i = 0; i < 84; i++)
+  // for(int i = 0; i < deck.nCards; i++)
   // {
   //   printf("%c %s %d\n", deck.cards[i].front, deck.cards[i].back, deck.cards[i].points);
   // }
@@ -61,12 +62,24 @@ int main()
   //   // for checking if deck shuffled correctly
   //     printf("shuffled deck:\n");
 
-  //   for(int i = 0; i < 84; i++)
+  //   for(int i = 0; i < deck.nCards; i++)
   // {
   //   printf("%c | %s %d\n", deck.cards[i].front, deck.cards[i].back, deck.cards[i].points);
   // }
 
   displayPlayerCards(P, nPlayers);
+  topCard = drawTopCard(&deck);
+
+  //   // for checking if drawTopCard() works correctly
+  //   for(int i = 0; i < deck.nCards; i++)
+  // {
+  //   printf("%c | %s %d\n", deck.cards[i].front, deck.cards[i].back, deck.cards[i].points);
+  // }
+  // printf("Top card: %c | %s %d\n", topCard.front, topCard.back, topCard.points);
+
+
+
+  
 	break;
 	
 	case 2:

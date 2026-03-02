@@ -142,12 +142,12 @@ displayPlayerCards(struct Player Player[], int nPlayers)
   }
 }
 
-// Card drawTopCard(Deck *ptrDeck)
-// {
-
-
-//   return; // replace with actual return value
-// }
+struct Card drawTopCard(struct Deck *ptrDeck)
+{
+  struct Card topCard = ptrDeck->cards[ptrDeck->nCards - 1]; // Get the top card
+  ptrDeck->nCards--; // Decrease the number of cards in the deck
+  return topCard; // Return the drawn card
+}
 
 
 // startNewGame()
