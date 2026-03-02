@@ -134,7 +134,7 @@ void shuffleDeck(struct Deck *deck)
   shuffle(&deck->cards, 84, sizeof(struct Card), seed);
 }
 
-displayPlayerCards(struct Player Player[], int nPlayers)
+void displayPlayerCards(struct Player Player[], int nPlayers)
 {
   for(int i = 0; i < nPlayers; i++)
   {
@@ -148,6 +148,7 @@ struct Card drawTopCard(struct Deck *ptrDeck)
   ptrDeck->nCards--; // Decrease the number of cards in the deck
   return topCard; // Return the drawn card
 }
+
 
 struct Player addCardToHand(struct Player player, struct Card drawnCard)
 {
@@ -194,6 +195,60 @@ void dealTank(struct Player players[], int nPlayers, struct Deck *ptrDeck)
   }
 }
 
+int colorToIndex(char frontCard)
+{
+    int idx;
+
+    switch(frontCard)
+    {
+        case 'R': idx = 0; break;
+        case 'O': idx = 1; break;
+        case 'Y': idx = 2; break;
+        case 'G': idx = 3; break;
+        case 'B': idx = 4; break;
+        case 'I': idx = 5; break;
+        case 'V': idx = 6; break;
+        default:  idx = 0; break;
+    }
+    return idx;
+}
+
+int checkIfColorExist(struct Player player[], struct Card drawnCard, int playerIndex)
+{
+  int bool = 0;
+  int colorIndex = colorToIndex(drawnCard.front);
+  if(player[playerIndex].tank[colorIndex] > 0)
+  {
+    bool = 1;
+  }
+  return bool;
+}
+
+void tryToScore(struct Player player[], struct Card drawnCard, int playerIndex)
+{
+  int colorIndex;
+
+  colorIndex = colorToIndex(drawnCard.front);
+
+  if(checkIfColorExist(player, drawnCard, playerIndex) == 1)
+  {
+    printf("Resolving turn for Player %d...\n", playerIndex+1);
+    printf("- Drawn card revealed: %c (%d pt/s)!\n", drawnCard.front, drawnCard.points);
+    printf("- Player %d has (%d) %c card/s worth a total of  (%d) points!\n", playerIndex+1, player[playerIndex].tank[colorIndex], drawnCard.front, drawnCard.points * player[playerIndex].tank[colorIndex]);
+    player[playerIndex].tank[colorIndex]++;
+    player[playerIndex].score += drawnCard.points * player[playerIndex].tank[colorIndex];
+    printf("- +%d points to Player %d's Score Pile!\n", drawnCard.points * player[playerIndex].tank[colorIndex], playerIndex+1);
+    player[playerIndex].tank[colorIndex] = 0;
+  }
+  else
+  {
+    printf("Resolving turn for Player %d...\n", playerIndex+1);
+    printf("- Drawn card revealed: %c (%d pt/s)!\n", drawnCard.front, drawnCard.points);
+    printf("- Player %d has no %c cards...\n", playerIndex+1, drawnCard.front);
+    printf("- Adding drawn card to Player %d's tank\n", playerIndex+1);
+    player[playerIndex] = addCardToHand(player[playerIndex], drawnCard);
+  }
+}
 
 // startNewGame()
 // {
