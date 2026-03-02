@@ -63,6 +63,22 @@ int getNumberOfPlayers()
   return nPlayers;
 }
 
+void initializePlayers(struct Player players[], int nPlayers)
+{
+  char names[][37] = {"MLDG", "yatsfr", "vibe", "winkeuu", "lemon"};
+  int i;
+  for (i = 0; i < nPlayers; i++)
+  {
+    strcpy(players[i].username, names[i]);
+    players[i].nHand = 0;   // player has 0 hand cards
+    players[i].score = 0;   // player has score of 0
+    for(int j = 0; j < 7; j++)
+    {
+      players[i].tank[j] = 0;
+    }
+  }
+}
+
 void displayPlayers(struct Player P[], int nPlayers)
 {
 	int i;
@@ -118,6 +134,20 @@ void shuffleDeck(struct Deck *deck)
   shuffle(&deck->cards, 84, sizeof(struct Card), seed);
 }
 
+displayPlayerCards(struct Player Player[], int nPlayers)
+{
+  for(int i = 0; i < nPlayers; i++)
+  {
+    printf("Player %d => [R:%d | O:%d | Y:%d | G:%d | B:%d | I:%d | V:%d ] // %d \n", i+1, Player[i].tank[0], Player[i].tank[1], Player[i].tank[2], Player[i].tank[3], Player[i].tank[4], Player[i].tank[5], Player[i].tank[6], Player[i].score);
+  }
+}
+
+// Card drawTopCard(Deck *ptrDeck)
+// {
+
+
+//   return; // replace with actual return value
+// }
 
 
 // startNewGame()
