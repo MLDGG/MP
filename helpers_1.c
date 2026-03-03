@@ -334,6 +334,34 @@ void tryToSteal(struct Player player[], struct Card drawnCard, int playerIndex, 
 
 }
 
+int checkIfWin(struct Player player[], int nPlayers, struct Deck Deck)
+{
+  int i;
+  int bool = 0;
+  for(i = 0; i < nPlayers; i++)
+  {
+    if(player[i].score >= 20 || Deck.nCards == 0)
+    {
+      bool = 1;
+    }
+  }
+  return bool;
+}
+
+int returnWinnerIndex(struct Player player[], int nPlayers, struct Deck deck)
+{
+  int i;
+  int winnerIndex = 0;
+  for(i = 0; i < nPlayers; i++)
+  {
+    if(player[i].score > player[winnerIndex].score)
+    {
+      winnerIndex = i;
+    }
+  }
+  return winnerIndex;
+}
+
 
 // startNewGame()
 // {
