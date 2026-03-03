@@ -28,20 +28,18 @@ int main()
   int nScoreOrSteal;
   int nplayerTurn = 0;
   int gameOver = 0;
+  int nWinningPoints = 20;
   struct Player P[6];
   struct Deck deck;
   struct Card drawnCard;
 
 
 
-  displayMainMenu();
+  getPlayerChoice(&nChoice);
 
-  do 
-  {
-    scanf("%d", &nChoice);
-  } while (nChoice < 0 || nChoice > 3);
-
-	switch (nChoice)
+  do{
+	
+    switch (nChoice)
 	{
 	case 0:
 	  break;
@@ -85,7 +83,7 @@ int main()
 
 
 // GAME START
-while(checkIfWin(P, nPlayers, deck) == 0)
+while(checkIfWin(P, nPlayers, deck, nWinningPoints) == 0)
 {
   // printf("Remaining cards in deck: %d\n", deck.nCards);
   drawnCard = drawTopCard(&deck);
@@ -117,19 +115,24 @@ while(checkIfWin(P, nPlayers, deck) == 0)
 
 returnWinnerIndex(P, nPlayers, deck);
 
+  getPlayerChoice(&nChoice);
 	break;
 	
 	case 2:
+    getPlayerChoice(&nChoice);
 	  break;
 	
 	case 3:
-	  /* code */ 
+  setWinningPoints(&nWinningPoints);
+    getPlayerChoice(&nChoice);
 	  break;
 	
 	
 	default:
 	  break;
 	}
+
+}while(nChoice != 0);
 
   return 0;
 }

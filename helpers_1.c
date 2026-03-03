@@ -53,6 +53,15 @@ void displayMainMenu()
   printf("Enter option: ");
 }
 
+void getPlayerChoice(int *nChoice)
+{
+  displayMainMenu();
+  do 
+  {
+    scanf("%d", nChoice);
+  } while (*nChoice < 0 || *nChoice > 3);
+}
+
 /**
  * Determines the number of players (between 3 and 6)
  * @return The number of players
@@ -447,13 +456,13 @@ void tryToSteal(struct Player player[], struct Card drawnCard, int playerIndex, 
  * @param deck is the deck of cards
  * @returns 1 if a player has a score of 20 or more, or if deck is empty, 0 otherwise
  */
-int checkIfWin(struct Player player[], int nPlayers, struct Deck Deck)
+int checkIfWin(struct Player player[], int nPlayers, struct Deck Deck, int nWinningPoints)
 {
   int i;
   int bool = 0;
   for(i = 0; i < nPlayers; i++)
   {
-    if(player[i].score >= 20 || Deck.nCards == 0)
+    if(player[i].score >= nWinningPoints || Deck.nCards == 0)
     {
       bool = 1;
     }
@@ -480,11 +489,22 @@ int returnWinnerIndex(struct Player player[], int nPlayers, struct Deck deck)
     }
   }
 
-  printf("Player %d wins with a score of %d points!\n", winnerIndex+1, player[winnerIndex].score);
+  printf("Player %d wins with a score of %d points!\n\n", winnerIndex+1, player[winnerIndex].score);
 
   return winnerIndex;
 }
 
+void setWinningPoints(int *nWinningPoints)
+{
+  printf("Set minimum number of points required to win the game: ");
+  scanf("%d", nWinningPoints); 
+
+  while(*nWinningPoints <= 0)
+  {
+    printf("Invalid input. Please enter a positive integer: ");
+    scanf("%d", nWinningPoints);
+  }
+}
 
 // startNewGame()
 // {
