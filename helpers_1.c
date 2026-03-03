@@ -15,6 +15,7 @@
 #include <string.h>
 
 #include "defs.h"
+#include "interface.c"
 
 
 // PROGRAM FLOW
@@ -43,6 +44,28 @@
 // setWinningPoints()
 // setShuffleSeed()
 
+/**
+ * changes color to index for use in isetcolor function
+ * @param color the color of the card
+ * @return the index of the color for use in isetcolor function
+ */
+int colorInterface(char color)
+{
+    int idx;
+
+    switch(color)
+    {
+        case 'R': idx = 1; break;
+        case 'O': idx = 0; break;
+        case 'Y': idx = 4; break;
+        case 'G': idx = 3; break;
+        case 'B': idx = 2; break;
+        case 'I': idx = 5; break;
+        case 'V': idx = 6; break;
+        default:  idx = 0; break;
+    }
+    return idx;
+}
 
 /**
  * Displays the main menu options
@@ -186,7 +209,26 @@ void displayPlayerCards(struct Player Player[], int nPlayers)
 {
   for(int i = 0; i < nPlayers; i++)
   {
-    printf("Player %d => [R:%d | O:%d | Y:%d | G:%d | B:%d | I:%d | V:%d ] // %d \n", i+1, Player[i].tank[0], Player[i].tank[1], Player[i].tank[2], Player[i].tank[3], Player[i].tank[4], Player[i].tank[5], Player[i].tank[6], Player[i].score);
+    printf("---------------------------------------------------------------------\n");
+    iSetColor(I_COLOR_WHITE);
+    printf("player %d => [",i+1);
+    iSetColor(I_COLOR_RED);
+    printf("R:%d | ", Player[i].tank[0]);
+    iSetColor(I_COLOR_WHITE);
+    printf("O:%d | ", Player[i].tank[1]);
+    iSetColor(I_COLOR_YELLOW);
+    printf("Y:%d | ", Player[i].tank[2]);
+    iSetColor(I_COLOR_GREEN);
+    printf("G:%d | ", Player[i].tank[3]);
+    iSetColor(I_COLOR_BLUE);
+    printf("B:%d | ", Player[i].tank[4]);
+    iSetColor(I_COLOR_CYAN);
+    printf("I:%d | ", Player[i].tank[5]);
+    iSetColor(I_COLOR_PURPLE);
+    printf("V:%d ] ", Player[i].tank[6]);
+    iSetColor(I_COLOR_WHITE);
+    printf("// %d \n", Player[i].score);
+    printf("---------------------------------------------------------------------\n");
   }
 }
 
@@ -306,7 +348,25 @@ int checkIfColorExist(struct Player player[], struct Card drawnCard, int playerI
  */
 void displayTopDeck(struct Card drawnCard, struct Deck deck)
 {
-  printf("\nTop Deck: %s (%d cards remaining in deck)\n", drawnCard.back, deck.nCards);
+  char color[3];
+  int i;
+  
+  for(i = 0; i < 3; i++)
+  {
+    color[i] = colorInterface(drawnCard.back[i]);
+  }
+
+  printf("\nTop Deck: ");
+  iSetColor(color[0]);
+  printf("%c", drawnCard.back[0]);
+  iSetColor(color[1]);
+  printf("%c", drawnCard.back[1]);
+  iSetColor(color[2]);
+  printf("%c", drawnCard.back[2]);
+  iSetColor(I_COLOR_WHITE);
+  printf(" (%d cards remaining in deck)\n\n", deck.nCards);
+
+  // printf("\nTop Deck: %s (%d cards remaining in deck)\n\n", drawnCard.back, deck.nCards);
 }
 
 /**
