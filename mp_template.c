@@ -86,6 +86,7 @@ int main()
   displayTopDeck(drawnCard, deck);
   //printf("Top card: %c | %s %d\n", drawnCard.front, drawnCard.back, drawnCard.points);
   nScoreOrSteal = scoreOrSteal(P, drawnCard, 0);
+
   if(nScoreOrSteal == 1)
   {
     tryToScore(P, drawnCard, 0);
@@ -93,7 +94,8 @@ int main()
   }
   else if(nScoreOrSteal == 2)
   {
-    getPlayerToSteal(P, 0, nPlayers);
+    tryToSteal(P, drawnCard, 0, nPlayers);
+    displayPlayerCards(P, nPlayers);
   }
 
 	break;

@@ -268,6 +268,7 @@ void tryToScore(struct Player player[], struct Card drawnCard, int playerIndex)
   }
 }
 
+// IMPROVE THIS FUNCTION 
 int getPlayerToSteal(struct Player player[], int playerIndex, int nPlayers)
 {
   int i;
@@ -287,11 +288,11 @@ int getPlayerToSteal(struct Player player[], int playerIndex, int nPlayers)
     }
   }
 
-  // FOR CHECKING IF INDEXED CORRECTLY
-  for(i = 0; i < nPlayers-1; i++)
-  {
-    printf("[%d] Player %d\n", i, index[i]);
-  }
+  // // FOR CHECKING IF INDEXED CORRECTLY
+  // for(i = 0; i < nPlayers-1; i++)
+  // {
+  //   printf("[%d] Player %d\n", i, index[i]);
+  // }
 
   do
   {
@@ -306,6 +307,30 @@ int getPlayerToSteal(struct Player player[], int playerIndex, int nPlayers)
 
 void tryToSteal(struct Player player[], struct Card drawnCard, int playerIndex, int nPlayers)
 {
+  int colorIndex;
+  int nPlayerToStealFrom;
+
+  nPlayerToStealFrom = getPlayerToSteal(player, playerIndex, nPlayers); // get index of player to steal from
+  colorIndex = colorToIndex(drawnCard.front);
+
+  if(checkIfColorExist(player, drawnCard, nPlayerToStealFrom-1) == 1)
+  {
+    printf("Resolving turn for Player %d...\n", playerIndex+1);
+    printf("- Drawn card revealed: %c (%d pt/s)!\n", drawnCard.front, drawnCard.points);
+    printf("- Player %d has (%d) %c card/s\n", nPlayerToStealFrom, player[nPlayerToStealFrom-1].tank[colorIndex], drawnCard.front);
+    player[nPlayerToStealFrom-1].tank[colorIndex]++;
+    printf("- +%d points to Player %d's Score Pile!\n", drawnCard.points * player[playerIndex].tank[colorIndex], playerIndex+1);
+    player[playerIndex].tank[colorIndex] += player[nPlayerToStealFrom-1].tank[colorIndex];
+    player[nPlayerToStealFrom-1].tank[colorIndex] = 0;
+  }
+  else
+  {
+    printf("Resolving turn for Player %d...\n", playerIndex+1);
+    printf("- Drawn card revealed: %c (%d pt/s)!\n", drawnCard.front, drawnCard.points);
+    printf("- Player %d has no %c cards...\n", nPlayerToStealFrom, drawnCard.front);
+    printf("- Adding drawn card to Player %d's tank\n", nPlayerToStealFrom);
+    player[nPlayerToStealFrom-1] = addCardToHand(player[nPlayerToStealFrom-1], drawnCard);
+  }
 
 }
 
