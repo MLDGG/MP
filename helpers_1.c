@@ -98,7 +98,7 @@ void getUsername(struct Player *pPlayer)
   do
   {
     printf("New player username: ");
-    scanf("%s", &username);
+    scanf("%s", username);
   } while (strlen(username) > 36);
   strcpy(pPlayer->username, username);
 }

@@ -22,7 +22,7 @@
 
 int main()
 {
-
+ 
   int nChoice;
   int nPlayers;
   int nScoreOrSteal;
