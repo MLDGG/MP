@@ -111,7 +111,7 @@ int getNumberOfPlayers()
  */
 void initializePlayers(struct Player players[], int nPlayers)
 {
-  char names[][37] = {"MLDG", "yatsfr", "vibe", "winkeuu", "lemon"};
+  char names[][37] = {"MLDG", "yatsfr", "vibe", "winkeuu", "lemon", "wak", "XxmariconxX", "yoshi"};
   int i;
   for (i = 0; i < nPlayers; i++)
   {
@@ -469,7 +469,7 @@ int getPlayerToSteal(struct Player player[], int playerIndex, int nPlayers)
     scanf("%d", &nChoice);
   } while (nChoice < 1 || nChoice > nPlayers-1);
 
-  printf("player %d was chosen to be stolen from\n", index[nChoice-1]);
+  printf("player %d was chosen to be stolen from\n\n", index[nChoice-1]);
 
   return index[nChoice-1]; // player number to steal from (minus 1 to match array index)
 }
@@ -573,13 +573,6 @@ void setWinningPoints(int *nWinningPoints)
     scanf("%d", nWinningPoints);
   }
 }
-
-// startNewGame()
-// {
-//   getNumberOfPlayers();
-// }
-
-
 
 
 
