@@ -53,6 +53,10 @@ void displayMainMenu()
   printf("Enter option: ");
 }
 
+/**
+ * Displays the main menu options and prompts the user to enter a choice
+ * @param nChoice pointer to store the user's choice
+ */
 void getPlayerChoice(int *nChoice)
 {
   displayMainMenu();
@@ -494,6 +498,10 @@ int returnWinnerIndex(struct Player player[], int nPlayers, struct Deck deck)
   return winnerIndex;
 }
 
+/**
+ * prompts user to set minimum number of points required to win the game
+ * @param nWinningPoints pointer to store the minimum number of points required to win the game
+ */
 void setWinningPoints(int *nWinningPoints)
 {
   printf("Set minimum number of points required to win the game: ");
