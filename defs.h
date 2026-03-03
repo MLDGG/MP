@@ -56,6 +56,7 @@ struct Player
   char username[37]; // name of player, max 36 characters + null terminator
   int tank[7]; // cards in player's hand
   int nHand; // number of cards in player's hand
+  int playerNum;
   int score; 
   int numWins;
 };

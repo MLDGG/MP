@@ -83,7 +83,7 @@ int main()
 
   // printf("Remaining cards in deck: %d\n", deck.nCards);
   drawnCard = drawTopCard(&deck);
-  printf("\nTop Deck: %s (%d cards remaining in deck)", drawnCard.back, deck.nCards);
+  displayTopDeck(drawnCard, deck);
   //printf("Top card: %c | %s %d\n", drawnCard.front, drawnCard.back, drawnCard.points);
   nScoreOrSteal = scoreOrSteal(P, drawnCard, 0);
   if(nScoreOrSteal == 1)
@@ -93,7 +93,7 @@ int main()
   }
   else if(nScoreOrSteal == 2)
   {
-    /* code */ 
+    getPlayerToSteal(P, 0, nPlayers);
   }
 
 	break;

@@ -72,6 +72,7 @@ void initializePlayers(struct Player players[], int nPlayers)
     strcpy(players[i].username, names[i]);
     players[i].nHand = 0;   // player has 0 hand cards
     players[i].score = 0;   // player has score of 0
+    players[i].playerNum = i+1; // player number (1-6)
     for(int j = 0; j < 7; j++)
     {
       players[i].tank[j] = 0;
@@ -223,6 +224,10 @@ int checkIfColorExist(struct Player player[], struct Card drawnCard, int playerI
   }
   return bool;
 }
+void displayTopDeck(struct Card drawnCard, struct Deck deck)
+{
+  printf("\nTop Deck: %s (%d cards remaining in deck)", drawnCard.back, deck.nCards);
+}
 
 int scoreOrSteal(struct Player player[], struct Card drawnCard, int playerIndex)
 {
@@ -262,6 +267,48 @@ void tryToScore(struct Player player[], struct Card drawnCard, int playerIndex)
     player[playerIndex] = addCardToHand(player[playerIndex], drawnCard);
   }
 }
+
+int getPlayerToSteal(struct Player player[], int playerIndex, int nPlayers)
+{
+  int i;
+  int j = 1;
+  int nChoice;
+  int index[nPlayers-1]; // store player number to steal from
+
+
+  printf("\nWho would you like to steal from?\n");
+  for(i = 0; i < nPlayers; i++)
+  {
+    if(i != playerIndex)
+    {
+      printf("\t[%d] Player %d\n", j, i+1);
+      index[j-1] = i+1; 
+      j++;
+    }
+  }
+
+  // FOR CHECKING IF INDEXED CORRECTLY
+  for(i = 0; i < nPlayers-1; i++)
+  {
+    printf("[%d] Player %d\n", i, index[i]);
+  }
+
+  do
+  {
+    printf("Enter option: ");
+    scanf("%d", &nChoice);
+  } while (nChoice < 1 || nChoice > nPlayers-1);
+
+  printf("player %d was chosen to be stolen from\n", index[nChoice-1]);
+
+  return index[nChoice-1]; // player number to steal from (minus 1 to match array index)
+}
+
+void tryToSteal(struct Player player[], struct Card drawnCard, int playerIndex, int nPlayers)
+{
+
+}
+
 
 // startNewGame()
 // {
