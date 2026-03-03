@@ -26,6 +26,8 @@ int main()
   int nChoice;
   int nPlayers;
   int nScoreOrSteal;
+  int nplayerTurn = 0;
+  int gameOver = 0;
   struct Player P[6];
   struct Deck deck;
   struct Card drawnCard;
@@ -81,22 +83,39 @@ int main()
     printf("After dealing tank:\n");
     displayPlayerCards(P, nPlayers);
 
+
+// GAME START
+while(checkIfWin(P, nPlayers, deck) == 0)
+{
   // printf("Remaining cards in deck: %d\n", deck.nCards);
   drawnCard = drawTopCard(&deck);
   displayTopDeck(drawnCard, deck);
-  //printf("Top card: %c | %s %d\n", drawnCard.front, drawnCard.back, drawnCard.points);
-  nScoreOrSteal = scoreOrSteal(P, drawnCard, 0);
 
+  //printf("Top card: %c | %s %d\n", drawnCard.front, drawnCard.back, drawnCard.points);
+  nScoreOrSteal = scoreOrSteal(P, drawnCard, nplayerTurn);
+  
   if(nScoreOrSteal == 1)
   {
-    tryToScore(P, drawnCard, 0);
+    tryToScore(P, drawnCard, nplayerTurn);
     displayPlayerCards(P, nPlayers);
   }
   else if(nScoreOrSteal == 2)
   {
-    tryToSteal(P, drawnCard, 0, nPlayers);
+    tryToSteal(P, drawnCard, nplayerTurn, nPlayers);
     displayPlayerCards(P, nPlayers);
   }
+
+  if(nplayerTurn == nPlayers-1)
+  {
+    nplayerTurn = 0;
+  }
+  else
+  {
+    nplayerTurn++;
+  }
+}
+
+returnWinnerIndex(P, nPlayers, deck);
 
 	break;
 	

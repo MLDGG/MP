@@ -226,7 +226,7 @@ int checkIfColorExist(struct Player player[], struct Card drawnCard, int playerI
 }
 void displayTopDeck(struct Card drawnCard, struct Deck deck)
 {
-  printf("\nTop Deck: %s (%d cards remaining in deck)", drawnCard.back, deck.nCards);
+  printf("\nTop Deck: %s (%d cards remaining in deck)\n", drawnCard.back, deck.nCards);
 }
 
 int scoreOrSteal(struct Player player[], struct Card drawnCard, int playerIndex)
@@ -239,6 +239,9 @@ int scoreOrSteal(struct Player player[], struct Card drawnCard, int playerIndex)
     printf("Enter option: ");
     scanf("%d", &choice);
   } while (choice < 1 || choice > 2);
+
+  printf("\n");
+
   return choice;
 }
 
@@ -255,7 +258,7 @@ void tryToScore(struct Player player[], struct Card drawnCard, int playerIndex)
     printf("- Player %d has (%d) %c card/s worth a total of  (%d) points!\n", playerIndex+1, player[playerIndex].tank[colorIndex], drawnCard.front, drawnCard.points * player[playerIndex].tank[colorIndex]);
     player[playerIndex].tank[colorIndex]++;
     player[playerIndex].score += drawnCard.points * player[playerIndex].tank[colorIndex];
-    printf("- +%d points to Player %d's Score Pile!\n", drawnCard.points * player[playerIndex].tank[colorIndex], playerIndex+1);
+    printf("- +%d points to Player %d's Score Pile!\n\n", drawnCard.points * player[playerIndex].tank[colorIndex], playerIndex+1);
     player[playerIndex].tank[colorIndex] = 0;
   }
   else
@@ -263,7 +266,7 @@ void tryToScore(struct Player player[], struct Card drawnCard, int playerIndex)
     printf("Resolving turn for Player %d...\n", playerIndex+1);
     printf("- Drawn card revealed: %c (%d pt/s)!\n", drawnCard.front, drawnCard.points);
     printf("- Player %d has no %c cards...\n", playerIndex+1, drawnCard.front);
-    printf("- Adding drawn card to Player %d's tank\n", playerIndex+1);
+    printf("- Adding drawn card to Player %d's tank\n\n", playerIndex+1);
     player[playerIndex] = addCardToHand(player[playerIndex], drawnCard);
   }
 }
@@ -319,7 +322,7 @@ void tryToSteal(struct Player player[], struct Card drawnCard, int playerIndex, 
     printf("- Drawn card revealed: %c (%d pt/s)!\n", drawnCard.front, drawnCard.points);
     printf("- Player %d has (%d) %c card/s\n", nPlayerToStealFrom, player[nPlayerToStealFrom-1].tank[colorIndex], drawnCard.front);
     player[nPlayerToStealFrom-1].tank[colorIndex]++;
-    printf("- +%d points to Player %d's Score Pile!\n", drawnCard.points * player[playerIndex].tank[colorIndex], playerIndex+1);
+    printf("- +%d cards to Player %d's tank!\n\n", player[nPlayerToStealFrom-1].tank[colorIndex], playerIndex+1);
     player[playerIndex].tank[colorIndex] += player[nPlayerToStealFrom-1].tank[colorIndex];
     player[nPlayerToStealFrom-1].tank[colorIndex] = 0;
   }
@@ -328,7 +331,7 @@ void tryToSteal(struct Player player[], struct Card drawnCard, int playerIndex, 
     printf("Resolving turn for Player %d...\n", playerIndex+1);
     printf("- Drawn card revealed: %c (%d pt/s)!\n", drawnCard.front, drawnCard.points);
     printf("- Player %d has no %c cards...\n", nPlayerToStealFrom, drawnCard.front);
-    printf("- Adding drawn card to Player %d's tank\n", nPlayerToStealFrom);
+    printf("- Adding drawn card to Player %d's tank\n\n", nPlayerToStealFrom);
     player[nPlayerToStealFrom-1] = addCardToHand(player[nPlayerToStealFrom-1], drawnCard);
   }
 
@@ -359,6 +362,9 @@ int returnWinnerIndex(struct Player player[], int nPlayers, struct Deck deck)
       winnerIndex = i;
     }
   }
+
+  printf("Player %d wins with a score of %d points!\n", winnerIndex+1, player[winnerIndex].score);
+
   return winnerIndex;
 }
 
