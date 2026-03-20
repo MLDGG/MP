@@ -233,13 +233,20 @@ void displayPlayerCards(struct Player Player[], int nPlayers)
 }
 
 /**
- * draw the top card of the deck(the last card in the array) and decrease the number of cards in the deck by 1
+ * draw the top card of the deck(index 0) and decrease the number of cards in the deck by 1
  * @param ptrDeck is a pointer to the deck
  * @returns the drawn card
  */
 struct Card drawTopCard(struct Deck *ptrDeck)
 {
-  struct Card topCard = ptrDeck->cards[ptrDeck->nCards - 1]; // Get the top card
+   int i;
+
+  struct Card topCard = ptrDeck->cards[0]; // Get the top card
+  // Shift the remaining cards up
+  for (int i = 0; i < ptrDeck->nCards - 1; i++)
+  {
+    ptrDeck->cards[i] = ptrDeck->cards[i + 1];
+  }
   ptrDeck->nCards--; // Decrease the number of cards in the deck
   return topCard; // Return the drawn card
 }
