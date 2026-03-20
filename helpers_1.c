@@ -111,11 +111,11 @@ int getNumberOfPlayers()
  */
 void initializePlayers(struct Player players[], int nPlayers)
 {
-  char names[][37] = {"MLDG", "yatsfr", "vibe", "winkeuu", "lemon", "wak", "XxmariconxX", "yoshi"};
+  // char names[][37] = {"MLDG", "yatsfr", "vibe", "winkeuu", "lemon", "wak", "XxmariconxX", "yoshi"};
   int i;
   for (i = 0; i < nPlayers; i++)
   {
-    strcpy(players[i].username, names[i]);
+    // strcpy(players[i].username, names[i]);
     players[i].nHand = 0;   // player has 0 hand cards
     players[i].score = 0;   // player has score of 0
     players[i].playerNum = i+1; // player number (1-6)
@@ -160,6 +160,25 @@ void getUsername(struct Player *pPlayer)
   strcpy(pPlayer->username, username);
 }
 
+int loadPlayers(struct Player players[])
+{
+  FILE *fptr;
+  int i = 0;
+
+  fptr = fopen("players.txt", "r");
+  if (fptr == NULL)
+  {
+    printf("File does not exist!\n");
+  }
+
+  while(fscanf(fptr, " %s %d %d", players[i].username, &players[i].numWins, &players[i].highScore) == 3)
+  {
+    i++;
+  }
+  fclose(fptr);
+  return i;
+}
+
 // source: https://www.youtube.com/watch?v=XzRyBwu_h48
 /**
  * loads the deck from mantis.txt 
@@ -174,8 +193,7 @@ int loadDeck(struct Deck *deck)
   fptr = fopen("mantis.txt", "r");
   if (fptr == NULL)
   {
-    printf("Error opening file!\n");
-    exit(1);
+    printf("File does not exist!\n");
   }
 
   while(fscanf(fptr, " %c | %s %d", &deck->cards[i].front, deck->cards[i].back, &deck->cards[i].points) == 3)
