@@ -30,12 +30,14 @@ int main()
   int nplayerTurn = 0;
   int gameOver = 0;
   int nWinningPoints = 20;
+  int settingChoice;
+  int seed = 0;
   struct Player P[6];
   struct Deck deck;
   struct Card drawnCard;
 
 
-
+  initRandom(); // initialize random seed
   getPlayerChoice(&nChoice);
 
   do{
@@ -59,7 +61,7 @@ int main()
   //   printf("%c %s %d\n", deck.cards[i].front, deck.cards[i].back, deck.cards[i].points);
   // }
 
-  shuffleDeck(&deck);
+  shuffleDeck(&deck, seed);
 
   //   // for checking if deck shuffled correctly
   //     printf("shuffled deck:\n");
@@ -124,7 +126,24 @@ returnWinnerIndex(P, nPlayers, deck);
 	  break;
 	
 	case 3:
-  setWinningPoints(&nWinningPoints);
+  settingChoice = getSettingsChoice();
+
+  switch(settingChoice)
+  {
+    case 0:
+      break;
+
+    case 1:
+      setWinningPoints(&nWinningPoints);
+      break;
+
+    case 2:
+      setShuffleSeed(&seed);
+      break;
+
+    default:
+      break;
+  }
     getPlayerChoice(&nChoice);
 	  break;
 	

@@ -190,13 +190,14 @@ int loadDeck(struct Deck *deck)
 /**
  * shuffles the deck of cards
  * @param deck is a pointer to the deck
+ * @param seed the seed for the random number generator
  */
-void shuffleDeck(struct Deck *deck)
+void shuffleDeck(struct Deck *deck, int seed)
 {
-  int seed;
-
-  initRandom();
-  seed = randomInt();
+  if(seed == 0)
+  {
+    seed = randomInt();
+  }
   shuffle(&deck->cards, 84, sizeof(struct Card), seed);
 }
 
@@ -581,10 +582,28 @@ void setWinningPoints(int *nWinningPoints)
   }
 }
 
+void setShuffleSeed(int *seed)
+{
+  printf("set shuffle seed (0 for random): ");
+  scanf("%d", seed);
+}
 
+void displaySettings()
+{
+  printf("Settings\n\t[1] Set Winning Points\n\t[2] Set Shuffle Seed\n\t[0] Back to Main Menu\n");
+}
 
-
-
+int getSettingsChoice()
+{
+  int nChoice;
+  displaySettings();
+  do 
+  {
+    printf("Enter option: ");
+    scanf("%d", &nChoice);
+  } while (nChoice < 0 || nChoice > 2);
+  return nChoice;
+}
 
 
 /******************************************************************************
