@@ -26,7 +26,6 @@ int main()
  
   int nChoice;
   int nPlayers;
-  int nUsernames;
   int nScoreOrSteal;
   int nplayerTurn = 0;
   int gameOver = 0;
@@ -35,6 +34,7 @@ int main()
   struct Player P[6];
   struct Deck deck;
   struct Card drawnCard;
+  struct PlayerList playerList;
 
 
 
@@ -49,17 +49,25 @@ int main()
 	
 	case 1:
 	nPlayers = getNumberOfPlayers(); // get number of players
-  nUsernames = loadPlayers(P); // load players from players.txt
-  initializePlayers(P, nPlayers); // initialize players with default values and usernames
+  playerList.nLoadedPlayers = loadPlayers(playerList.players); // load players from players.txt
+  initializePlayers(P, nPlayers, playerList); // initialize players with default values and usernames
 	displayPlayers(P, nPlayers); // display players
-  newPlayer = isNewPlayer(P, nPlayers, nUsernames);
+  displayPlayerList(playerList, nPlayers); // display player list for user to choose from
+  newPlayer = getPlayerChoiceFromList(nPlayers, playerList); // get user choice for player from list
   if(newPlayer == 0)
   {
-    addNewPlayer(P, nPlayers, nUsernames);
+    addNewPlayer(P, &playerList, nPlayers); // add new player to players.txt and player array
   }
   else
+  {
+    isExistingPlayer(P, playerList, nPlayers, newPlayer); // initialize player with existing player username from players.txt
+  }
+
   // getUsername(&P[nPlayers-1]); // get username of new player
   // printf("Player %d: %s\n", nPlayers, P[nPlayers-1].username); // display new player (for checking only)
+
+  // THIS IS WHERE THE GAME STARTS
+
   deck.nCards = loadDeck(&deck); // load deck from mantis.txt
 
   // // for checking if deck loaded correctly
