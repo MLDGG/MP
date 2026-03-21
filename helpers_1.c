@@ -145,6 +145,53 @@ void displayPlayers(struct Player P[], int nPlayers)
 
 }
 
+int isNewPlayer(struct Player P[], int nPlayers, int nUsernames)
+{
+  int choice;
+  int i;
+  int j = 0;
+
+  printf("Select Player 3: \n");
+  for(i = nPlayers - 1; i < nUsernames; i++)
+  {
+    if(i == nPlayers -  1)
+    {
+      printf("[%d] <Add new Player>\n", j);
+    }
+    else
+    {
+      printf("[%d] %s\n", j, P[i].username);
+    }
+    j++;
+  }
+
+  printf(">> ");
+  scanf("%d", &choice);
+  return choice;
+}
+
+void addNewPlayer(struct Player P[], int nPlayers, int nUsernames)
+{
+  FILE *fptr;
+  int i = 0;
+  getUsername(&P[nPlayers-1]); // get username of new player
+   printf("Player %d: %s\n", nPlayers, P[nPlayers-1].username);
+
+  fptr = fopen("players.txt", "a");
+  if (fptr == NULL)
+  {
+    printf("File does not exist!\n");
+  }
+
+  fprintf(fptr, "\n%s %d %d\n", P[nPlayers-1].username, 0, 0);
+  fclose(fptr);
+}
+
+void existingPlayer(struct Player P[], int nPlayers, int nUsernames)
+{
+  P[nPlayers-1] = P[nUsernames-1];
+  printf("Player %d: %s\n", nPlayers, P[nPlayers-1].username);
+}
 /**
  * gets the username of the new player and updates the player struct with the username
  * @param pPlayers The player array
@@ -159,6 +206,7 @@ void getUsername(struct Player *pPlayer)
   } while (strlen(username) > 36);
   strcpy(pPlayer->username, username);
 }
+
 
 int loadPlayers(struct Player players[])
 {

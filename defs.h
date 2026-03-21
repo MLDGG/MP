@@ -59,6 +59,7 @@ struct Player
   int playerNum;
   int score; 
   int numWins;
+  int highScore;
 };
 
 #endif // DEFS_H; Include this to prevent redefinition error
