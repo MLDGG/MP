@@ -37,7 +37,6 @@ int main()
   struct PlayerList playerList;
 
 
-
   getPlayerChoice(&nChoice);
 
   do{
