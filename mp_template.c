@@ -98,7 +98,7 @@ int main()
   // }
 
 
-    printf("After dealing tank:\n");
+    printf("\nAfter dealing tank:\n");
     displayPlayerCards(P, nPlayers);
 
 
