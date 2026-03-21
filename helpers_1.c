@@ -108,14 +108,23 @@ int getNumberOfPlayers()
  * Initializes the list of players, wherein each player has 0 hand cards, 0 tank cards, and 0 score, and their player number
  * @param players The player array
  * @param nPlayers The number of players
+ * @param playerList The list of players loaded from players.txt
  */
-void initializePlayers(struct Player players[], int nPlayers)
+void initializePlayers(struct Player players[], int nPlayers, struct PlayerList playerList)
 {
-  char names[][37] = {"MLDG", "yatsfr", "vibe", "winkeuu", "lemon", "wak", "XxmariconxX", "yoshi"};
+  // char names[][37] = {"MLDG", "yatsfr", "vibe", "winkeuu", "lemon", "wak", "XxmariconxX", "yoshi"};
   int i;
   for (i = 0; i < nPlayers; i++)
   {
-    strcpy(players[i].username, names[i]);
+    // initialize game players with username from players.txt 
+    if(i < nPlayers - 1){
+    strcpy(players[i].username, playerList.players[i].username);
+    }
+    else
+    {
+      strcpy(players[i].username, ""); // last player is the new player, so username is empty string for now
+    }
+
     players[i].nHand = 0;   // player has 0 hand cards
     players[i].score = 0;   // player has score of 0
     players[i].playerNum = i+1; // player number (1-6)
@@ -131,7 +140,7 @@ void initializePlayers(struct Player players[], int nPlayers)
 * Displays the players username and player number, with the last player as "?"
 * @param P the player array
 * @param nPlayers the number of players
- */
+*/
 void displayPlayers(struct Player P[], int nPlayers)
 {
 	int i;
@@ -143,6 +152,82 @@ void displayPlayers(struct Player P[], int nPlayers)
 	
 	printf("P%d: ?\n", i+1);
 
+}
+
+/**
+* Displays the list of players from players.txt for the user 
+*to choose from, with  the option to add a new player as option 0
+* @param playerList the list of players loaded from players.txt
+* @param nPlayers the number of players
+*/
+void displayPlayerList(struct PlayerList playerList, int nPlayers)
+{
+  int i;
+  int j = 1;
+
+  printf("\nSelect Player %d: \n", nPlayers);
+  printf("[0] <Add new Player>\n");
+  for(i = nPlayers-1; i < playerList.nLoadedPlayers; i++)
+  {
+    printf("[%d] %s\n", j, playerList.players[i].username);
+    j++;
+  }
+}
+
+/**
+* Get user input for player choice from the displayed player list
+* 
+* @param nPlayers the number of players
+* @param playerList the list of players loaded from players.txt
+* @return the user's choice
+*/
+int getPlayerChoiceFromList(int nPlayers, struct PlayerList playerList)
+{
+  int choice;
+  do
+  {
+    printf("Enter option: ");
+    scanf("%d", &choice);
+  } while (choice < 0 || choice > playerList.nLoadedPlayers - nPlayers + 1);
+
+  return choice;
+}
+
+/**
+* if user picks from the existing list of players, initialize the new player with the existing player's username from players.txt
+* @param P the player array
+* @param nPlayers the number of players
+* @param playerList the list of players loaded from players.txt
+* @param choice the user's choice for player username from the displayed player list
+*/
+void isExistingPlayer(struct Player P[], struct PlayerList playerList, int nPlayers, int choice)
+{
+ strcpy(P[nPlayers-1].username, playerList.players[choice+nPlayers-2].username); // initialize new player with existing player username from players.txt (check if there is a better way to do this without complicated formula for indexing)
+ printf("Player %d: %s\n", nPlayers, P[nPlayers-1].username);
+}
+
+/**
+* adds a new player to the players.txt file and initializes the new player with the new player's username
+* @param P the player array
+* @param playerList the list of players loaded from players.txt
+* @param nPlayers the number of players
+*/
+void addNewPlayer(struct Player P[], struct PlayerList* playerList, int nPlayers)
+{
+  FILE *fptr;
+  int i = 0;
+  getUsername(&P[nPlayers-1]); // get username of new player
+   printf("Player %d: %s\n", nPlayers, P[nPlayers-1].username);
+
+  fptr = fopen("players.txt", "a");
+  if (fptr == NULL)
+  {
+    printf("File does not exist!\n");
+  }
+
+  fprintf(fptr, "\n%s %d %d", P[nPlayers-1].username, 0, 0);
+
+  fclose(fptr);
 }
 
 /**
@@ -160,7 +245,29 @@ void getUsername(struct Player *pPlayer)
   strcpy(pPlayer->username, username);
 }
 
-// source: https://www.youtube.com/watch?v=XzRyBwu_h48
+/**
+* loads the players from players.txt and returns the number of players loaded
+* @param P the player array
+*/
+int loadPlayers(struct Player players[])
+{
+  FILE *fptr;
+  int i = 0;
+
+  fptr = fopen("players.txt", "r");
+  if (fptr == NULL)
+  {
+    printf("File does not exist!\n");
+  }
+
+  while(fscanf(fptr, " %s %d %d", players[i].username, &players[i].numWins, &players[i].highScore) == 3)
+  {
+    i++;
+  }
+  fclose(fptr);
+  return i;
+}
+
 /**
  * loads the deck from mantis.txt 
  * @param deck contains the deck of cards
@@ -174,8 +281,7 @@ int loadDeck(struct Deck *deck)
   fptr = fopen("mantis.txt", "r");
   if (fptr == NULL)
   {
-    printf("Error opening file!\n");
-    exit(1);
+    printf("File does not exist!\n");
   }
 
   while(fscanf(fptr, " %c | %s %d", &deck->cards[i].front, deck->cards[i].back, &deck->cards[i].points) == 3)

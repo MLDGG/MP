@@ -59,6 +59,12 @@ struct Player
   int playerNum;
   int score; 
   int numWins;
+  int highScore;
 };
 
+struct PlayerList
+{
+  struct Player players[50]; // Array of players
+  int nLoadedPlayers; // Number of players loaded from file
+};
 #endif // DEFS_H; Include this to prevent redefinition error
