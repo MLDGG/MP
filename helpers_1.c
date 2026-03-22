@@ -528,10 +528,10 @@ void tryToScore(struct Player player[], struct Card drawnCard, int playerIndex)
     printf("Resolving turn for Player %d...\n", playerIndex+1);
     printf("- Drawn card revealed: %c (%d pt/s)!\n", drawnCard.front, drawnCard.points);
     printf("- Player %d has (%d) %c card/s worth a total of  (%d) points!\n", playerIndex+1, player[playerIndex].tank[colorIndex], drawnCard.front, drawnCard.points * player[playerIndex].tank[colorIndex]);
-    player[playerIndex].tank[colorIndex]++;
-    player[playerIndex].score += drawnCard.points * player[playerIndex].tank[colorIndex];
+    player[playerIndex].tank[colorIndex]++; // Add card to player hand
+    player[playerIndex].score += drawnCard.points * player[playerIndex].tank[colorIndex]; // calculate score
     printf("- +%d points to Player %d's Score Pile!\n\n", drawnCard.points * player[playerIndex].tank[colorIndex], playerIndex+1);
-    player[playerIndex].tank[colorIndex] = 0;
+    player[playerIndex].tank[colorIndex] = 0; //discard scored cards
   }
   else
   {
@@ -539,7 +539,7 @@ void tryToScore(struct Player player[], struct Card drawnCard, int playerIndex)
     printf("- Drawn card revealed: %c (%d pt/s)!\n", drawnCard.front, drawnCard.points);
     printf("- Player %d has no %c cards...\n", playerIndex+1, drawnCard.front);
     printf("- Adding drawn card to Player %d's tank\n\n", playerIndex+1);
-    player[playerIndex] = addCardToHand(player[playerIndex], drawnCard);
+    player[playerIndex] = addCardToHand(player[playerIndex], drawnCard); // add card to hand
   }
 }
 
@@ -687,18 +687,27 @@ void setWinningPoints(int *nWinningPoints)
     scanf("%d", nWinningPoints);
   }
 }
-
+/**
+ * prompts the user to set shuffle seed
+ * @param seed contains the shuffle seed
+ */
 void setShuffleSeed(int *seed)
 {
   printf("set shuffle seed (0 for random): ");
   scanf("%d", seed);
 }
 
+/**
+ * displays settings interface
+ */
 void displaySettings()
 {
   printf("Settings\n\t[1] Set Winning Points\n\t[2] Set Shuffle Seed\n\t[0] Back to Main Menu\n");
 }
 
+/**
+ * get user's input for settings choice 
+ */
 int getSettingsChoice()
 {
   int nChoice;
@@ -711,6 +720,13 @@ int getSettingsChoice()
   return nChoice;
 }
 
+/**
+ * saves player stats (number of wins and highest score) in playerList
+ * @param player contains the array of players ingame
+ * @param playerList contains the list of players loaded using players.txt
+ * @param nplayers is the number of players playing 
+ * @param winnerIndex is the index of the player who won the game
+ */
 void savePlayerStats(struct Player player[], struct PlayerList* playerList, int nPlayers, int winnerIndex)
 {
   int i;
@@ -740,7 +756,11 @@ void savePlayerStats(struct Player player[], struct PlayerList* playerList, int 
 
 }
 
-void savePlayerFile(struct Player player[], struct PlayerList PlayerList)
+/**
+ * saves the player stats in the players.txt file
+ * @param PlayerList contains the list of players to be saved in the file
+ */
+void savePlayerFile(struct PlayerList PlayerList)
 {
   FILE *fptr;
   int i;
@@ -761,7 +781,11 @@ void savePlayerFile(struct Player player[], struct PlayerList PlayerList)
 }
 
 
-
+/**
+ * sorts PlayerWins in descending order
+ * @param PlayerList contains the list of player information
+ * @param sorted contains the sorted PlayerList 
+ */
 void sortPlayerWins(struct PlayerList PlayerList, struct PlayerList* sorted)
 {
   int i, j, max;
@@ -787,6 +811,11 @@ void sortPlayerWins(struct PlayerList PlayerList, struct PlayerList* sorted)
   }
 }
 
+/**
+ * sorts player high scores in descending order
+ * @param PlayerList contains the list of player information
+ * @param sorted contains the sorted PlayerList 
+ */
 void sortPlayerHighScore(struct PlayerList PlayerList, struct PlayerList* sorted)
 {
   int i, j, max;
@@ -813,6 +842,10 @@ void sortPlayerHighScore(struct PlayerList PlayerList, struct PlayerList* sorted
 }
 
 
+/**
+ * diplays player stats (number of wins)
+ * @param sorted contains the sorted player list 
+ */
 void displayPlayerWins(struct PlayerList sorted)
 {
   int i;
@@ -823,6 +856,10 @@ void displayPlayerWins(struct PlayerList sorted)
   }
 }
 
+/**
+ * diplays player stats (high scores)
+ * @param sorted contains the sorted player list 
+ */
 void displayPlayerScores(struct PlayerList sorted)
 {
   int i;
@@ -833,11 +870,17 @@ void displayPlayerScores(struct PlayerList sorted)
   }
 }
 
+/**
+ * Display statistics interface
+ */
 void displayStatistics()
 {
   printf("View Statistics\n\t[1] Display Number of Wins\n\t[2] Display High Scores\n\t[0] Back to Main Menu\n");
 }
 
+/**
+ * get user's input for statistics choice 
+ */
 int getStatisticsChoice()
 {
   int nChoice;

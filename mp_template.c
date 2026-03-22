@@ -139,7 +139,7 @@ while(checkIfWin(P, nPlayers, deck, nWinningPoints) == 0)
 
 winnerIndex = returnWinnerIndex(P, nPlayers, deck);
 savePlayerStats(P, &playerList, nPlayers, winnerIndex);
-savePlayerFile(P, playerList);
+savePlayerFile(playerList);
 
   getPlayerChoice(&nChoice);
 	break;
