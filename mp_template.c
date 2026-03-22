@@ -33,10 +33,14 @@ int main()
   int newPlayer;
   int settingChoice;
   int seed = 0;
+  int winnerIndex;
+  int statsChoice;
   struct Player P[6];
   struct Deck deck;
   struct Card drawnCard;
   struct PlayerList playerList;
+  struct PlayerList sortedWins;
+  struct PlayerList sortedScores;
 
 
   initRandom(); // initialize random seed
@@ -133,12 +137,35 @@ while(checkIfWin(P, nPlayers, deck, nWinningPoints) == 0)
   }
 }
 
-returnWinnerIndex(P, nPlayers, deck);
+winnerIndex = returnWinnerIndex(P, nPlayers, deck);
+savePlayerStats(P, &playerList, nPlayers, winnerIndex);
+savePlayerFile(P, playerList);
 
   getPlayerChoice(&nChoice);
 	break;
 	
 	case 2:
+    playerList.nLoadedPlayers = loadPlayers(playerList.players);
+
+    statsChoice = getStatisticsChoice();
+    switch(statsChoice)
+  {
+    case 0:
+      break;
+
+    case 1:
+      sortPlayerWins(playerList, &sortedWins);
+      displayPlayerWins(sortedWins);
+      break;
+
+    case 2:
+      sortPlayerHighScore(playerList, &sortedScores);
+      displayPlayerScores(sortedScores);
+      break;
+
+    default:
+      break;
+  }
     getPlayerChoice(&nChoice);
 	  break;
 	

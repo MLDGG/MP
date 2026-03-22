@@ -604,25 +604,25 @@ void tryToSteal(struct Player player[], struct Card drawnCard, int playerIndex, 
   int nPlayerToStealFrom;
 
   nPlayerToStealFrom = getPlayerToSteal(player, playerIndex, nPlayers); // get index of player to steal from
-  colorIndex = colorToIndex(drawnCard.front);
+  colorIndex = colorToIndex(drawnCard.front); //get index of card color in tank
 
-  if(checkIfColorExist(player, drawnCard, nPlayerToStealFrom-1) == 1)
+  if(checkIfColorExist(player, drawnCard, nPlayerToStealFrom-1) == 1) // if the drawn card color exists in the tank of the person you are stealing from
   {
-    printf("Resolving turn for Player %d...\n", playerIndex+1);
+    printf("Resolving turn for Player %d...\n", playerIndex+1); 
     printf("- Drawn card revealed: %c (%d pt/s)!\n", drawnCard.front, drawnCard.points);
     printf("- Player %d has (%d) %c card/s\n", nPlayerToStealFrom, player[nPlayerToStealFrom-1].tank[colorIndex], drawnCard.front);
-    player[nPlayerToStealFrom-1].tank[colorIndex]++;
-    printf("- +%d cards to Player %d's tank!\n\n", player[nPlayerToStealFrom-1].tank[colorIndex], playerIndex+1);
-    player[playerIndex].tank[colorIndex] += player[nPlayerToStealFrom-1].tank[colorIndex];
-    player[nPlayerToStealFrom-1].tank[colorIndex] = 0;
+    player[nPlayerToStealFrom-1].tank[colorIndex]++; //add card to the player you are stealing from
+    printf("- +%d cards to Player %d's tank!\n\n", player[nPlayerToStealFrom-1].tank[colorIndex], playerIndex+1); 
+    player[playerIndex].tank[colorIndex] += player[nPlayerToStealFrom-1].tank[colorIndex]; // add all cards from the person you are stealing from to the stealer
+    player[nPlayerToStealFrom-1].tank[colorIndex] = 0; // stolen player now has zero of that card color
   }
-  else
+  else //if stolen player has no card color of the drawn card
   {
     printf("Resolving turn for Player %d...\n", playerIndex+1);
     printf("- Drawn card revealed: %c (%d pt/s)!\n", drawnCard.front, drawnCard.points);
     printf("- Player %d has no %c cards...\n", nPlayerToStealFrom, drawnCard.front);
     printf("- Adding drawn card to Player %d's tank\n\n", nPlayerToStealFrom);
-    player[nPlayerToStealFrom-1] = addCardToHand(player[nPlayerToStealFrom-1], drawnCard);
+    player[nPlayerToStealFrom-1] = addCardToHand(player[nPlayerToStealFrom-1], drawnCard); //add drawn card to player to steal from
   }
 
 }
@@ -711,6 +711,144 @@ int getSettingsChoice()
   return nChoice;
 }
 
+void savePlayerStats(struct Player player[], struct PlayerList* playerList, int nPlayers, int winnerIndex)
+{
+  int i;
+  int j;
+
+  playerList->nLoadedPlayers = loadPlayers(playerList->players);
+
+  // iterate through eeach players that are playing
+  for(i = 0; i < nPlayers; i++) 
+  {
+    // iterate through the player list
+    for(j = 0; j < playerList->nLoadedPlayers; j++)
+    {
+      if(strcmp(player[i].username, playerList->players[j].username) == 0) //find player in playerlist
+      {
+          if(player[i].score > playerList->players[j].highScore)// check if score is greater than previous high score
+          {
+            playerList->players[j].highScore = player[i].score; // update high score if current score is higher than previous high score
+          }
+          if(i == winnerIndex)
+          {
+            playerList->players[j].numWins++; // update number of wins for the player if they are the winner
+          }
+      }
+    }
+  }
+
+}
+
+void savePlayerFile(struct Player player[], struct PlayerList PlayerList)
+{
+  FILE *fptr;
+  int i;
+
+  fptr = fopen("players.txt", "w");
+  if (fptr == NULL)
+  {
+    printf("File does not exist!\n");
+  }
+
+  for (i = 0; i < PlayerList.nLoadedPlayers; i++)
+  {
+    fprintf(fptr, "%s %d %d\n", PlayerList.players[i].username, PlayerList.players[i].numWins,PlayerList.players[i].highScore);
+  }
+
+  fclose(fptr);
+
+}
+
+
+
+void sortPlayerWins(struct PlayerList PlayerList, struct PlayerList* sorted)
+{
+  int i, j, max;
+  struct Player temp;
+
+  *sorted = PlayerList;
+  for(i = 0; i < sorted->nLoadedPlayers - 1; i++)
+  {
+    max = i;
+    for(j = i+1; j < sorted->nLoadedPlayers; j++)
+    {
+      if(sorted->players[max].numWins < sorted->players[j].numWins)
+      {
+        max = j;
+      }
+    }
+    if(i != max)
+    {
+      temp = sorted->players[i];
+      sorted->players[i] = sorted->players[max];
+      sorted->players[max] = temp;
+    }
+  }
+}
+
+void sortPlayerHighScore(struct PlayerList PlayerList, struct PlayerList* sorted)
+{
+  int i, j, max;
+  struct Player temp;
+
+  *sorted = PlayerList;
+  for(i = 0; i < sorted->nLoadedPlayers - 1; i++)
+  {
+    max = i;
+    for(j = i+1; j < sorted->nLoadedPlayers; j++)
+    {
+      if(sorted->players[max].highScore < sorted->players[j].highScore)
+      {
+        max = j;
+      }
+    }
+    if(i != max)
+    {
+      temp = sorted->players[i];
+      sorted->players[i] = sorted->players[max];
+      sorted->players[max] = temp;
+    }
+  }
+}
+
+
+void displayPlayerWins(struct PlayerList sorted)
+{
+  int i;
+
+  for(i = 0; i < sorted.nLoadedPlayers; i++)
+  {
+    printf("%s %d\n", sorted.players[i].username, sorted.players[i].numWins);
+  }
+}
+
+void displayPlayerScores(struct PlayerList sorted)
+{
+  int i;
+
+  for(i = 0; i < sorted.nLoadedPlayers; i++)
+  {
+    printf("%s %d\n", sorted.players[i].username, sorted.players[i].highScore);
+  }
+}
+
+void displayStatistics()
+{
+  printf("View Statistics\n\t[1] Display Number of Wins\n\t[2] Display High Scores\n\t[0] Back to Main Menu\n");
+}
+
+int getStatisticsChoice()
+{
+  int nChoice;
+  displayStatistics();
+  do 
+  {
+    printf("Enter option: ");
+    scanf("%d", &nChoice);
+  } while (nChoice < 0 || nChoice > 2);
+  return nChoice;
+}
 
 /******************************************************************************
  * NOTE: These functions are placed here in helpers_1.c to demonstrate code
