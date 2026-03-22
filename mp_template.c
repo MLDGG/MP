@@ -54,96 +54,96 @@ int main()
 	  break;
 	
 	case 1:
-	nPlayers = getNumberOfPlayers(); // get number of players
-  playerList.nLoadedPlayers = loadPlayers(playerList.players); // load players from players.txt
-  initializePlayers(P, nPlayers, playerList); // initialize players with default values and usernames
-	displayPlayers(P, nPlayers); // display players
-  displayPlayerList(playerList, nPlayers); // display player list for user to choose from
-  newPlayer = getPlayerChoiceFromList(nPlayers, playerList); // get user choice for player from list
-  if(newPlayer == 0)
-  {
-    addNewPlayer(P, &playerList, nPlayers); // add new player to players.txt and player array
-  }
-  else
-  {
-    isExistingPlayer(P, playerList, nPlayers, newPlayer); // initialize player with existing player username from players.txt
-  }
+    nPlayers = getNumberOfPlayers(); // get number of players
+    playerList.nLoadedPlayers = loadPlayers(playerList.players); // load players from players.txt
+    initializePlayers(P, nPlayers, playerList); // initialize players with default values and usernames
+    displayPlayers(P, nPlayers); // display players
+    displayPlayerList(playerList, nPlayers); // display player list for user to choose from
+    newPlayer = getPlayerChoiceFromList(nPlayers, playerList); // get user choice for player from list
+    if(newPlayer == 0)
+    {
+      addNewPlayer(P, &playerList, nPlayers); // add new player to players.txt and player array
+    }
+    else
+    {
+      isExistingPlayer(P, playerList, nPlayers, newPlayer); // initialize player with existing player username from players.txt
+    }
 
-  // getUsername(&P[nPlayers-1]); // get username of new player
-  // printf("Player %d: %s\n", nPlayers, P[nPlayers-1].username); // display new player (for checking only)
+    // getUsername(&P[nPlayers-1]); // get username of new player
+    // printf("Player %d: %s\n", nPlayers, P[nPlayers-1].username); // display new player (for checking only)
 
-  // THIS IS WHERE THE GAME STARTS
+    // THIS IS WHERE THE GAME STARTS
 
-  deck.nCards = loadDeck(&deck); // load deck from mantis.txt
+    deck.nCards = loadDeck(&deck); // load deck from mantis.txt
 
-  // // for checking if deck loaded correctly
-  // for(int i = 0; i < deck.nCards; i++)
-  // {
-  //   printf("%c %s %d\n", deck.cards[i].front, deck.cards[i].back, deck.cards[i].points);
-  // }
+    // // for checking if deck loaded correctly
+    // for(int i = 0; i < deck.nCards; i++)
+    // {
+    //   printf("%c %s %d\n", deck.cards[i].front, deck.cards[i].back, deck.cards[i].points);
+    // }
 
-  shuffleDeck(&deck, seed);
+    shuffleDeck(&deck, seed);
 
-  //   // for checking if deck shuffled correctly
-  //     printf("shuffled deck:\n");
+    //   // for checking if deck shuffled correctly
+    //     printf("shuffled deck:\n");
 
-  //   for(int i = 0; i < deck.nCards; i++)
-  // {
-  //   printf("%c | %s %d\n", deck.cards[i].front, deck.cards[i].back, deck.cards[i].points);
-  // }
+    //   for(int i = 0; i < deck.nCards; i++)
+    // {
+    //   printf("%c | %s %d\n", deck.cards[i].front, deck.cards[i].back, deck.cards[i].points);
+    // }
 
-  displayPlayerCards(P, nPlayers);
-  dealTank(P, nPlayers, &deck);
-
-  //   // for checking if dealt cards  correctly
-  //   for(int i = 0; i < deck.nCards; i++)
-  // {
-  //   printf("%c | %s %d\n", deck.cards[i].front, deck.cards[i].back, deck.cards[i].points);
-  // }
-
-
-    printf("\nAfter dealing tank:\n");
     displayPlayerCards(P, nPlayers);
+    dealTank(P, nPlayers, &deck);
+
+    //   // for checking if dealt cards  correctly
+    //   for(int i = 0; i < deck.nCards; i++)
+    // {
+    //   printf("%c | %s %d\n", deck.cards[i].front, deck.cards[i].back, deck.cards[i].points);
+    // }
 
 
-// GAME START
-while(checkIfWin(P, nPlayers, deck, nWinningPoints) == 0)
-{
-  // printf("Remaining cards in deck: %d\n", deck.nCards);
-  drawnCard = drawTopCard(&deck);
-  displayTopDeck(drawnCard, deck);
+      printf("\nAfter dealing tank:\n");
+      displayPlayerCards(P, nPlayers);
 
-  //printf("Top card: %c | %s %d\n", drawnCard.front, drawnCard.back, drawnCard.points);
-  nScoreOrSteal = scoreOrSteal(P, drawnCard, nplayerTurn);
-  
-  if(nScoreOrSteal == 1)
+
+  // GAME START
+  while(checkIfWin(P, nPlayers, deck, nWinningPoints) == 0)
   {
-    tryToScore(P, drawnCard, nplayerTurn);
-    displayPlayerCards(P, nPlayers);
-  }
-  else if(nScoreOrSteal == 2)
-  {
-    tryToSteal(P, drawnCard, nplayerTurn, nPlayers);
-    displayPlayerCards(P, nPlayers);
+    // printf("Remaining cards in deck: %d\n", deck.nCards);
+    drawnCard = drawTopCard(&deck);
+    displayTopDeck(drawnCard, deck);
+
+    //printf("Top card: %c | %s %d\n", drawnCard.front, drawnCard.back, drawnCard.points);
+    nScoreOrSteal = scoreOrSteal(P, drawnCard, nplayerTurn);
+    
+    if(nScoreOrSteal == 1)
+    {
+      tryToScore(P, drawnCard, nplayerTurn);
+      displayPlayerCards(P, nPlayers);
+    }
+    else if(nScoreOrSteal == 2)
+    {
+      tryToSteal(P, drawnCard, nplayerTurn, nPlayers);
+      displayPlayerCards(P, nPlayers);
+    }
+
+    if(nplayerTurn == nPlayers-1)
+    {
+      nplayerTurn = 0;
+    }
+    else
+    {
+      nplayerTurn++;
+    }
   }
 
-  if(nplayerTurn == nPlayers-1)
-  {
-    nplayerTurn = 0;
-  }
-  else
-  {
-    nplayerTurn++;
-  }
-}
+  winnerIndex = returnWinnerIndex(P, nPlayers, deck);
+  savePlayerStats(P, &playerList, nPlayers, winnerIndex);
+  savePlayerFile(playerList);
 
-winnerIndex = returnWinnerIndex(P, nPlayers, deck);
-savePlayerStats(P, &playerList, nPlayers, winnerIndex);
-savePlayerFile(playerList);
-
-  getPlayerChoice(&nChoice);
-	break;
-	
+    getPlayerChoice(&nChoice);
+    break;
+    
 	case 2:
     playerList.nLoadedPlayers = loadPlayers(playerList.players);
 
@@ -170,26 +170,26 @@ savePlayerFile(playerList);
 	  break;
 	
 	case 3:
-  settingChoice = getSettingsChoice();
+    settingChoice = getSettingsChoice();
 
-  switch(settingChoice)
-  {
-    case 0:
-      break;
+    switch(settingChoice)
+    {
+      case 0:
+        break;
 
-    case 1:
-      setWinningPoints(&nWinningPoints);
-      break;
+      case 1:
+        setWinningPoints(&nWinningPoints);
+        break;
 
-    case 2:
-      setShuffleSeed(&seed);
-      break;
+      case 2:
+        setShuffleSeed(&seed);
+        break;
 
-    default:
+      default:
+        break;
+    }
+      getPlayerChoice(&nChoice);
       break;
-  }
-    getPlayerChoice(&nChoice);
-	  break;
 	
 	
 	default:
