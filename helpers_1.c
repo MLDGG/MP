@@ -115,7 +115,7 @@ void initializePlayers(struct Player players[], int nPlayers, struct PlayerList 
   int i;
   for (i = 0; i < nPlayers; i++)
   {
-    strcpy(players[i].username, ""); // last player is the new player, so username is empty string for now
+    strcpy(players[i].username, ""); 
 
     players[i].nHand = 0;   // player has 0 hand cards
     players[i].score = 0;   // player has score of 0
@@ -146,18 +146,18 @@ void displayPlayers(struct Player P[], int nPlayers)
 /**
 * Displays the player username and player number
 * @param P the player array
-* @param nPlayers the number of players
+* @param playerIndex contains the current player index
 */
-void displayPlayer(struct Player P[], int nPlayerIndex)
+void displayPlayer(struct Player P[], int playerIndex)
 {
-		printf("P%d: %s\n", nPlayerIndex + 1, P[nPlayerIndex].username);
+		printf("P%d: %s\n", playerIndex + 1, P[playerIndex].username);
 }
 
 /**
 * Displays the list of players from players.txt for the user 
 *to choose from, with  the option to add a new player as option 0
 * @param playerList the list of players loaded from players.txt
-* @param nPlayers the number of players
+* @param playerIndex is the current player index
 */
 void displayPlayerList(struct PlayerList playerList, int playerIndex)
 {
@@ -195,8 +195,8 @@ int getPlayerChoiceFromList(int nPlayers, struct PlayerList playerList)
 /**
 * if user picks from the existing list of players, initialize the new player with the existing player's username from players.txt
 * @param P the player array
-* @param nPlayers the number of players
 * @param playerList the list of players loaded from players.txt
+* @param playerIndex contains the current player index
 * @param choice the user's choice for player username from the displayed player list
 */
 void isExistingPlayer(struct Player P[], struct PlayerList playerList, int playerIndex, int choice)
@@ -206,26 +206,30 @@ void isExistingPlayer(struct Player P[], struct PlayerList playerList, int playe
 }
 
 /**
-* adds a new player to the players.txt file and initializes the new player with the new player's username
+* checks if a username is already taken
 * @param P the player array
-* @param playerList the list of players loaded from players.txt
-* @param nPlayers the number of players
+* @param playerIndex contains the current player index
+* @param username is an array containing the username to be checked
 */
-int checkTakenUsername(struct Player P[], int playerIndex, const char username[])
+int checkTakenUsername(struct Player P[], int playerIndex, char username[])
 {
+  int found = 0;
+
   for (int i = 0; i < playerIndex; i++)
   {
     if (strcmp(P[i].username, username) == 0)
     {
-      return 1;
+      found = 1;
     }
   }
-  return 0;
+  return found;
 }
 
 /**
- * gets the username of the new player 
- * @param 
+ * gets the username of the new player
+ * @param P the player array
+ * @param playerIndex contains the current player index
+ * @param username is an array where the username will be stored
  */
 void getUsername(struct Player P[], int playerIndex, char username[])
 {
@@ -246,11 +250,17 @@ void getUsername(struct Player P[], int playerIndex, char username[])
   } while (strlen(username) == 0 || strlen(username) > 36);
 }
 
+/**
+ * add new player and add it to the list of players.
+ * @param P the player array
+ * @param playerList is the list of players loaded from players.txt
+ * @param playerIndex contains the current player index
+ */
 void addNewPlayer(struct Player P[], struct PlayerList* playerList, int playerIndex)
 {
   FILE *fptr;
 
-  getUsername(P, playerIndex, P[playerIndex].username); // get unique username for new player
+  getUsername(P, playerIndex, P[playerIndex].username); // get  username for new player 
   printf("Player %d: %s\n", playerIndex + 1, P[playerIndex].username);
 
   fptr = fopen("players.txt", "a");
@@ -259,10 +269,10 @@ void addNewPlayer(struct Player P[], struct PlayerList* playerList, int playerIn
     printf("File does not exist!\n");
   }
 
-  fprintf(fptr, "\n%s %d %d", P[playerIndex].username, 0, 0);
+  fprintf(fptr, "\n%s %d %d", P[playerIndex].username, 0, 0); // adds new player to the file
   fclose(fptr);
 
-  if (playerList != NULL)
+  if (playerList != NULL) // updates playerList
   {
     strcpy(playerList->players[playerList->nLoadedPlayers].username, P[playerIndex].username);
     playerList->players[playerList->nLoadedPlayers].numWins = 0;
