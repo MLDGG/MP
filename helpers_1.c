@@ -226,12 +226,31 @@ int checkTakenUsername(struct Player P[], int playerIndex, char username[])
 }
 
 /**
+* checks if a username will be duplicated in the list of players
+* @param playerList the list of players loaded from players.txt
+* @param username contains the username to be checked
+*/
+int checkPlayerListUsername(struct PlayerList *playerList, char username[])
+{
+  int found = 0;
+  for (int i = 0; i < playerList->nLoadedPlayers; i++)
+  {
+    if (strcmp(playerList->players[i].username, username) == 0)
+    {
+      found = 1;
+    }
+  }
+  return found;
+}
+
+/**
  * gets the username of the new player
  * @param P the player array
  * @param playerIndex contains the current player index
+ * @param playerList is the list of players loaded from players.txt
  * @param username is an array where the username will be stored
  */
-void getUsername(struct Player P[], int playerIndex, char username[])
+void getUsername(struct Player P[], int playerIndex, struct PlayerList *playerList, char username[])
 {
   do
   {
@@ -244,7 +263,12 @@ void getUsername(struct Player P[], int playerIndex, char username[])
     }
     else if (checkTakenUsername(P, playerIndex, username))
     {
-      printf("That username is already taken by another player. Please choose a different one.\n");
+      printf("That username is already taken by another current player. Please choose a different one.\n");
+      username[0] = '\0';
+    }
+    else if (checkPlayerListUsername(playerList, username))
+    {
+      printf("That username already exists in the saved player list. Please choose a different one.\n");
       username[0] = '\0';
     }
   } while (strlen(username) == 0 || strlen(username) > 36);
@@ -260,7 +284,7 @@ void addNewPlayer(struct Player P[], struct PlayerList* playerList, int playerIn
 {
   FILE *fptr;
 
-  getUsername(P, playerIndex, P[playerIndex].username); // get  username for new player 
+  getUsername(P, playerIndex, playerList, P[playerIndex].username); // get unique username for new player 
   printf("Player %d: %s\n", playerIndex + 1, P[playerIndex].username);
 
   fptr = fopen("players.txt", "a");
