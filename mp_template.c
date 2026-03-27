@@ -26,6 +26,7 @@ int main()
  
   int nChoice;
   int nPlayers;
+  int validChoice;
   int nScoreOrSteal;
   int nplayerTurn = 0;
   int gameOver = 0;
@@ -57,21 +58,10 @@ int main()
     nPlayers = getNumberOfPlayers(); // get number of players
     playerList.nLoadedPlayers = loadPlayers(playerList.players); // load players from players.txt
     initializePlayers(P, nPlayers, playerList); // initialize players with default values and usernames
-    // displayPlayers(P, nPlayers); // display players
-    // displayPlayerList(playerList, nPlayers); // display player list for user to choose from
-    // newPlayer = getPlayerChoiceFromList(nPlayers, playerList); // get user choice for player from list
-    // if(newPlayer == 0)
-    // {
-    //   addNewPlayer(P, &playerList, nPlayers); // add new player to players.txt and player array
-    // }
-    // else
-    // {
-    //   isExistingPlayer(P, playerList, nPlayers, newPlayer); // initialize player with existing player username from players.txt
-    // }
 
     for(int i = 0; i < nPlayers; i++)
     {
-      int validChoice = 0;
+      validChoice = 0;
       do
       {
         displayPlayerList(playerList, i); // display player list for user to choose from
