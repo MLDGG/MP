@@ -112,18 +112,10 @@ int getNumberOfPlayers()
  */
 void initializePlayers(struct Player players[], int nPlayers, struct PlayerList playerList)
 {
-  // char names[][37] = {"MLDG", "yatsfr", "vibe", "winkeuu", "lemon", "wak", "XxmariconxX", "yoshi"};
   int i;
   for (i = 0; i < nPlayers; i++)
   {
-    // initialize game players with username from players.txt 
-    if(i < nPlayers - 1){
-    strcpy(players[i].username, playerList.players[i].username);
-    }
-    else
-    {
-      strcpy(players[i].username, ""); // last player is the new player, so username is empty string for now
-    }
+    strcpy(players[i].username, ""); // last player is the new player, so username is empty string for now
 
     players[i].nHand = 0;   // player has 0 hand cards
     players[i].score = 0;   // player has score of 0
@@ -137,7 +129,7 @@ void initializePlayers(struct Player players[], int nPlayers, struct PlayerList 
 
 
 /**
-* Displays the players username and player number, with the last player as "?"
+* Displays the players username and player number
 * @param P the player array
 * @param nPlayers the number of players
 */
@@ -145,13 +137,20 @@ void displayPlayers(struct Player P[], int nPlayers)
 {
 	int i;
 	
-	for(i = 0; i < nPlayers-1; i++)
+	for(i = 0; i < nPlayers; i++)
 	{
 		printf("P%d: %s\n", i+1, P[i].username);
 	}
-	
-	printf("P%d: ?\n", i+1);
+}
 
+/**
+* Displays the player username and player number
+* @param P the player array
+* @param nPlayers the number of players
+*/
+void displayPlayer(struct Player P[], int nPlayerIndex)
+{
+		printf("P%d: %s\n", nPlayerIndex + 1, P[nPlayerIndex].username);
 }
 
 /**
@@ -160,14 +159,14 @@ void displayPlayers(struct Player P[], int nPlayers)
 * @param playerList the list of players loaded from players.txt
 * @param nPlayers the number of players
 */
-void displayPlayerList(struct PlayerList playerList, int nPlayers)
+void displayPlayerList(struct PlayerList playerList, int playerIndex)
 {
   int i;
   int j = 1;
 
-  printf("\nSelect Player %d: \n", nPlayers);
+  printf("\nSelect Player %d: \n", playerIndex + 1);
   printf("[0] <Add new Player>\n");
-  for(i = nPlayers-1; i < playerList.nLoadedPlayers; i++)
+  for(i = 0; i < playerList.nLoadedPlayers; i++)
   {
     printf("[%d] %s\n", j, playerList.players[i].username);
     j++;
@@ -188,7 +187,7 @@ int getPlayerChoiceFromList(int nPlayers, struct PlayerList playerList)
   {
     printf("Enter option: ");
     scanf("%d", &choice);
-  } while (choice < 0 || choice > playerList.nLoadedPlayers - nPlayers + 1);
+  } while (choice < 0 || choice > playerList.nLoadedPlayers + 1);
 
   return choice;
 }
@@ -200,10 +199,10 @@ int getPlayerChoiceFromList(int nPlayers, struct PlayerList playerList)
 * @param playerList the list of players loaded from players.txt
 * @param choice the user's choice for player username from the displayed player list
 */
-void isExistingPlayer(struct Player P[], struct PlayerList playerList, int nPlayers, int choice)
+void isExistingPlayer(struct Player P[], struct PlayerList playerList, int playerIndex, int choice)
 {
- strcpy(P[nPlayers-1].username, playerList.players[choice+nPlayers-2].username); // initialize new player with existing player username from players.txt (check if there is a better way to do this without complicated formula for indexing)
- printf("Player %d: %s\n", nPlayers, P[nPlayers-1].username);
+ strcpy(P[playerIndex].username, playerList.players[choice - 1].username);
+ printf("Player %d: %s\n", playerIndex + 1, P[playerIndex].username);
 }
 
 /**
@@ -212,12 +211,47 @@ void isExistingPlayer(struct Player P[], struct PlayerList playerList, int nPlay
 * @param playerList the list of players loaded from players.txt
 * @param nPlayers the number of players
 */
-void addNewPlayer(struct Player P[], struct PlayerList* playerList, int nPlayers)
+int checkTakenUsername(struct Player P[], int playerIndex, const char username[])
+{
+  for (int i = 0; i < playerIndex; i++)
+  {
+    if (strcmp(P[i].username, username) == 0)
+    {
+      return 1;
+    }
+  }
+  return 0;
+}
+
+/**
+ * gets the username of the new player 
+ * @param 
+ */
+void getUsername(struct Player P[], int playerIndex, char username[])
+{
+  do
+  {
+    printf("New player username: ");
+    scanf("%36s", username);
+
+    if (strlen(username) == 0)
+    {
+      printf("Username cannot be empty. Try again.\n");
+    }
+    else if (checkTakenUsername(P, playerIndex, username))
+    {
+      printf("That username is already taken by another player. Please choose a different one.\n");
+      username[0] = '\0';
+    }
+  } while (strlen(username) == 0 || strlen(username) > 36);
+}
+
+void addNewPlayer(struct Player P[], struct PlayerList* playerList, int playerIndex)
 {
   FILE *fptr;
-  int i = 0;
-  getUsername(&P[nPlayers-1]); // get username of new player
-   printf("Player %d: %s\n", nPlayers, P[nPlayers-1].username);
+
+  getUsername(P, playerIndex, P[playerIndex].username); // get unique username for new player
+  printf("Player %d: %s\n", playerIndex + 1, P[playerIndex].username);
 
   fptr = fopen("players.txt", "a");
   if (fptr == NULL)
@@ -225,25 +259,19 @@ void addNewPlayer(struct Player P[], struct PlayerList* playerList, int nPlayers
     printf("File does not exist!\n");
   }
 
-  fprintf(fptr, "\n%s %d %d", P[nPlayers-1].username, 0, 0);
-
+  fprintf(fptr, "\n%s %d %d", P[playerIndex].username, 0, 0);
   fclose(fptr);
+
+  if (playerList != NULL)
+  {
+    strcpy(playerList->players[playerList->nLoadedPlayers].username, P[playerIndex].username);
+    playerList->players[playerList->nLoadedPlayers].numWins = 0;
+    playerList->players[playerList->nLoadedPlayers].highScore = 0;
+    playerList->nLoadedPlayers++;
+  }
 }
 
-/**
- * gets the username of the new player and updates the player struct with the username
- * @param pPlayers The player array
- */
-void getUsername(struct Player *pPlayer)
-{
-  char username[37];
-  do
-  {
-    printf("New player username: ");
-    scanf("%s", username);
-  } while (strlen(username) > 36);
-  strcpy(pPlayer->username, username);
-}
+
 
 /**
 * loads the players from players.txt and returns the number of players loaded

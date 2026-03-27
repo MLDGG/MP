@@ -57,18 +57,47 @@ int main()
     nPlayers = getNumberOfPlayers(); // get number of players
     playerList.nLoadedPlayers = loadPlayers(playerList.players); // load players from players.txt
     initializePlayers(P, nPlayers, playerList); // initialize players with default values and usernames
-    displayPlayers(P, nPlayers); // display players
-    displayPlayerList(playerList, nPlayers); // display player list for user to choose from
-    newPlayer = getPlayerChoiceFromList(nPlayers, playerList); // get user choice for player from list
-    if(newPlayer == 0)
+    // displayPlayers(P, nPlayers); // display players
+    // displayPlayerList(playerList, nPlayers); // display player list for user to choose from
+    // newPlayer = getPlayerChoiceFromList(nPlayers, playerList); // get user choice for player from list
+    // if(newPlayer == 0)
+    // {
+    //   addNewPlayer(P, &playerList, nPlayers); // add new player to players.txt and player array
+    // }
+    // else
+    // {
+    //   isExistingPlayer(P, playerList, nPlayers, newPlayer); // initialize player with existing player username from players.txt
+    // }
+
+    for(int i = 0; i < nPlayers; i++)
     {
-      addNewPlayer(P, &playerList, nPlayers); // add new player to players.txt and player array
-    }
-    else
-    {
-      isExistingPlayer(P, playerList, nPlayers, newPlayer); // initialize player with existing player username from players.txt
+      int validChoice = 0;
+      do
+      {
+        displayPlayerList(playerList, i); // display player list for user to choose from
+        newPlayer = getPlayerChoiceFromList(i, playerList); // get user choice for player from list
+
+        if(newPlayer == 0)
+        {
+          addNewPlayer(P, &playerList, i); // add new player to players.txt and player array
+          validChoice = 1;
+        }
+        else
+        {
+          if (checkTakenUsername(P, i, playerList.players[newPlayer - 1].username))
+          {
+            printf("That username is already assigned to another current player. Pick a different player or add a new one.\n");
+          }
+          else
+          {
+            isExistingPlayer(P, playerList, i, newPlayer); // initialize player with existing player username from players.txt
+            validChoice = 1;
+          }
+        }
+      } while (!validChoice);
     }
 
+    displayPlayers(P, nPlayers);
     // getUsername(&P[nPlayers-1]); // get username of new player
     // printf("Player %d: %s\n", nPlayers, P[nPlayers-1].username); // display new player (for checking only)
 
