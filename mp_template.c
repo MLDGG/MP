@@ -11,8 +11,8 @@
 #include <stdio.h>
 
 #include "defs.h"
-#include "helpers_1.c"
 #include "helpers_2.c"
+#include "helpers_1.c"
 
 
 /* ----- definitions (i.e., constants, typedefs, structs) ----- */
@@ -56,10 +56,11 @@ int main()
 	  break;
 	
 	case 1:
+  
     nPlayers = getNumberOfPlayers(); // get number of players
     playerList.nLoadedPlayers = loadPlayers(playerList.players); // load players from players.txt
     initializePlayers(P, nPlayers, playerList); // initialize players with default values and usernames
-
+    
     //get username for each player
     for(int i = 0; i < nPlayers; i++)
     {
