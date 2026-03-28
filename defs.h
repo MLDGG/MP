@@ -38,30 +38,42 @@ typedef struct
   int year;  // The year
 } Date;
 
+/**
+ * Represents a card with a front color, 3 back color, and its point value
+ */
 struct Card
 {
   char front; // front of card has a single color
-  char back[4]; // back shows 3 different color
+  char back[3]; // back shows 3 different color
   int points; // point value of card
 };
 
+/**
+ * Represents a deck of cards
+ */
 struct Deck
 {
   struct Card cards[84]; // Cards in the deck
   int nCards;     // Number of cards in the deck
 };
 
+/**
+ * Represents a player
+ */
 struct Player
 {
   char username[37]; // name of player, max 36 characters + null terminator
   int tank[7]; // cards in player's hand
   int nHand; // number of cards in player's hand
-  int playerNum;
-  int score; 
-  int numWins;
-  int highScore;
+  int playerNum; // its player number
+  int score;  // player score
+  int numWins; // number of wins
+  int highScore; // high score
 };
 
+/**
+ * Represents a player list (loaded from player.txt)
+ */
 struct PlayerList
 {
   struct Player players[50]; // Array of players
