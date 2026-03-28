@@ -18,32 +18,6 @@
 #include "interface.c"
 
 
-// PROGRAM FLOW
-
-// // displayMainMenu()
-// startNewGame()
-// displayTopPlayers()
-// displaySettings()
-// TerminateProgram()
-
-// loadPlayers()
-// loadDeck()
-// savePlayers()
-
-// // Game Proper
-// // getNumberOfPlayers()
-// // getUsername()
-// shuffleDeck()
-// dealCards()
-// trytoScore()
-// trytoSteal()
-// displayGameResults()
-// displayStatistics()
-
-// //settings
-// setWinningPoints()
-// setShuffleSeed()
-
 /**
  * changes color to index for use in isetcolor function
  * @param color the color of the card
