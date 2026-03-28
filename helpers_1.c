@@ -47,7 +47,6 @@ int colorInterface(char color)
 void displayMainMenu()
 {
   printf("Main Menu\n\t [1] New Game \n\t [2] Top Players \n\t [3] Settings \n\t [0] Exit\n");
-  printf("Enter option: ");
 }
 
 /**
@@ -59,6 +58,7 @@ void getPlayerChoice(int *nChoice)
   displayMainMenu();
   do 
   {
+    printf("Enter option: ");
     scanf("%d", nChoice);
   } while (*nChoice < 0 || *nChoice > 3);
 }

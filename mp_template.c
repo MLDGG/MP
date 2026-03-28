@@ -24,12 +24,12 @@
 int main()
 {
  
-  int nChoice; // user input for main menu
-  int nPlayers; // number of players
+  int menuChoice; // user input for main menu
+  int numPlayers; // number of players
   int validChoice; // checks if user inputs is valid (for player username)
-  int nScoreOrSteal; // user input if player wants to score or steal
-  int nplayerTurn = 0; // variable to see who's turn is it
-  int nWinningPoints = 20; // variable for minimum minimum points
+  int turnChoice; // user input if player wants to score or steal
+  int playerTurn = 0; // variable to see who's turn is it
+  int winningPoints = 20; // variable for minimum minimum points
   int newPlayer; // user input if new player (add a username) or existing player
   int settingChoice; // user input for setting
   int seed = 0; // for shuffling deck
@@ -46,10 +46,10 @@ int main()
   initRandom(); // initialize random seed
 
   // get main menu choice
-  getPlayerChoice(&nChoice);
+  getPlayerChoice(&menuChoice);
   do{
 	
-    switch (nChoice)
+    switch (menuChoice)
 	{
   // terminate program  
 	case 0:
@@ -57,12 +57,12 @@ int main()
 	
 	case 1:
   
-    nPlayers = getNumberOfPlayers(); // get number of players
+    numPlayers = getNumberOfPlayers(); // get number of players
     playerList.nLoadedPlayers = loadPlayers(playerList.players); // load players from players.txt
-    initializePlayers(P, nPlayers, playerList); // initialize players with default values and usernames
+    initializePlayers(P, numPlayers, playerList); // initialize players with default values and usernames
     
     //get username for each player
-    for(int i = 0; i < nPlayers; i++)
+    for(int i = 0; i < numPlayers; i++)
     {
       validChoice = 0; // to check if user picks valid choice
       do
@@ -89,7 +89,7 @@ int main()
         }
       } while (!validChoice);
     }
-    displayPlayers(P, nPlayers); // displays all the players
+    displayPlayers(P, numPlayers); // displays all the players
 
 
 
@@ -116,8 +116,8 @@ int main()
     //   printf("%c | %s %d\n", deck.cards[i].front, deck.cards[i].back, deck.cards[i].points);
     // }
 
-    displayPlayerCards(P, nPlayers);
-    dealTank(P, nPlayers, &deck);
+    displayPlayerCards(P, numPlayers);
+    dealTank(P, numPlayers, &deck);
 
     //   // for checking if dealt cards  correctly
     //   for(int i = 0; i < deck.nCards; i++)
@@ -127,46 +127,46 @@ int main()
 
 
       printf("\nAfter dealing tank:\n");
-      displayPlayerCards(P, nPlayers);
+      displayPlayerCards(P, numPlayers);
 
 
   // GAME START
-  while(checkIfWin(P, nPlayers, deck, nWinningPoints) == 0)
+  while(checkIfWin(P, numPlayers, deck, winningPoints) == 0)
   {
     // printf("Remaining cards in deck: %d\n", deck.nCards);
     drawnCard = drawTopCard(&deck); // draw card
     displayTopDeck(drawnCard, deck); // display drawn card
 
     //printf("Top card: %c | %s %d\n", drawnCard.front, drawnCard.back, drawnCard.points);
-    nScoreOrSteal = scoreOrSteal(P, drawnCard, nplayerTurn); // get user choice if score or steam
+    turnChoice = scoreOrSteal(P, drawnCard, playerTurn); // get user choice if score or steam
     
-    if(nScoreOrSteal == 1) // if score
+    if(turnChoice == 1) // if score
     {
-      tryToScore(P, drawnCard, nplayerTurn);
-      displayPlayerCards(P, nPlayers);
+      tryToScore(P, drawnCard, playerTurn);
+      displayPlayerCards(P, numPlayers);
     }
-    else if(nScoreOrSteal == 2) // if steal
+    else if(turnChoice == 2) // if steal
     {
-      tryToSteal(P, drawnCard, nplayerTurn, nPlayers);
-      displayPlayerCards(P, nPlayers);
+      tryToSteal(P, drawnCard, playerTurn, numPlayers);
+      displayPlayerCards(P, numPlayers);
     }
 
-    if(nplayerTurn == nPlayers-1) // if all players has played a turn, reset to player 1 next turn
+    if(playerTurn == numPlayers-1) // if all players has played a turn, reset to player 1 next turn
     {
-      nplayerTurn = 0;
+      playerTurn = 0;
     }
     else
     {
-      nplayerTurn++; // next player's turn
+      playerTurn++; // next player's turn
     }
   }
 
   
-  winnerIndex = returnWinnerIndex(P, nPlayers, deck); // returns and displays the player index of the winner
-  savePlayerStats(P, &playerList, nPlayers, winnerIndex); // save the stats in playerlist variable
+  winnerIndex = returnWinnerIndex(P, numPlayers, deck); // returns and displays the player index of the winner
+  savePlayerStats(P, &playerList, numPlayers, winnerIndex); // save the stats in playerlist variable
   savePlayerFile(playerList); // save the playerlist variable in the file
 
-    getPlayerChoice(&nChoice); // asks the user for main menu input
+    getPlayerChoice(&menuChoice); // asks the user for main menu input
     break;
   
   // display statistics  
@@ -194,7 +194,7 @@ int main()
     default:
       break;
   }
-    getPlayerChoice(&nChoice);
+    getPlayerChoice(&menuChoice);
 	  break;
 	
   // display settings
@@ -207,7 +207,7 @@ int main()
         break;
       // set minimum winning points
       case 1: 
-        setWinningPoints(&nWinningPoints);
+        setWinningPoints(&winningPoints);
         break;
     
       // set shuffle seed
@@ -218,7 +218,7 @@ int main()
       default:
         break;
     }
-      getPlayerChoice(&nChoice);
+      getPlayerChoice(&menuChoice);
       break;
 	
 	
@@ -226,7 +226,7 @@ int main()
 	  break;
 	}
 
-}while(nChoice != 0);
+}while(menuChoice != 0);
 
   return 0;
 }
