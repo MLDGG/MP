@@ -24,24 +24,23 @@
 int main()
 {
  
-  int nChoice;
-  int nPlayers;
-  int validChoice;
-  int nScoreOrSteal;
-  int nplayerTurn = 0;
-  int gameOver = 0;
-  int nWinningPoints = 20;
-  int newPlayer;
-  int settingChoice;
-  int seed = 0;
-  int winnerIndex;
-  int statsChoice;
-  struct Player P[6];
-  struct Deck deck;
-  struct Card drawnCard;
-  struct PlayerList playerList;
-  struct PlayerList sortedWins;
-  struct PlayerList sortedScores;
+  int nChoice; // user input for main menu
+  int nPlayers; // number of players
+  int validChoice; // checks if user inputs is valid (for player username)
+  int nScoreOrSteal; // user input if player wants to score or steal
+  int nplayerTurn = 0; // variable to see who's turn is it
+  int nWinningPoints = 20; // variable for minimum minimum points
+  int newPlayer; // user input if new player (add a username) or existing player
+  int settingChoice; // user input for setting
+  int seed = 0; // for shuffling deck
+  int winnerIndex; // index of the winner
+  int statsChoice; // user input for statistics
+  struct Player P[6]; // player array
+  struct Deck deck; // deck
+  struct Card drawnCard; // drawn card
+  struct PlayerList playerList; // loaded players from players.txt
+  struct PlayerList sortedWins; // sorted player wins (from higest to lowest)
+  struct PlayerList sortedScores; // sorted player high scores (from highest to lowest)
 
 
   initRandom(); // initialize random seed
