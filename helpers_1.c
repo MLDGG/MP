@@ -55,12 +55,18 @@ void displayMainMenu()
  */
 void getPlayerChoice(int *nChoice)
 {
+  int valid;
+
   displayMainMenu();
-  do 
+  printf("Enter option: ");
+  valid = scanf("%d", nChoice);
+
+  while (valid != 1 || *nChoice < 0 || *nChoice > 3)
   {
-    printf("Enter option: ");
-    scanf("%d", nChoice);
-  } while (*nChoice < 0 || *nChoice > 3);
+    printf("Invalid input! Enter a number from 0 to 3: ");
+    while (getchar() != '\n'); // loops / clears everything until \n remains
+    valid = scanf("%d", nChoice);
+  }
 }
 
 /**
@@ -70,11 +76,17 @@ void getPlayerChoice(int *nChoice)
 int getNumberOfPlayers()
 {
   int nPlayers;
-  do
+  int valid; 
+
+  printf("How many players?(3-6): ");
+  valid = scanf("%d", &nPlayers);
+
+  while ( valid != 1 || nPlayers < 3 || nPlayers > 6)
   {
-    printf("How many players?(3-6): ");
-    scanf("%d", &nPlayers);
-  } while (nPlayers < 3 || nPlayers > 6);
+    printf("Invalid input! Enter a number from (3-6): ");
+    while (getchar() != '\n'); // loops / clears everything until \n remains
+    valid = scanf("%d", &nPlayers);
+  }
   return nPlayers;
 }
 
@@ -157,11 +169,16 @@ void displayPlayerList(struct PlayerList playerList, int playerIndex)
 int getPlayerChoiceFromList(int nPlayers, struct PlayerList playerList)
 {
   int choice;
-  do
+  int valid;
+
+  printf("Enter option: ");
+  valid = scanf("%d", &choice);
+  while (valid != 1 || choice < 0 || choice > playerList.nLoadedPlayers)
   {
-    printf("Enter option: ");
-    scanf("%d", &choice);
-  } while (choice < 0 || choice > playerList.nLoadedPlayers + 1);
+    printf("Invalid input! Enter a number from (0 to %d): ", playerList.nLoadedPlayers);
+    while (getchar() != '\n'); // loops / clears everything until \n remains
+    valid = scanf("%d", &choice);
+  }
 
   return choice;
 }
@@ -229,20 +246,21 @@ void getUsername(struct Player P[], int playerIndex, struct PlayerList *playerLi
   do
   {
     printf("New player username: ");
-    scanf("%36s", username);
+    scanf("%s", username); 
 
-    if (strlen(username) == 0)
-    {
-      printf("Username cannot be empty. Try again.\n");
-    }
-    else if (checkTakenUsername(P, playerIndex, username))
+    if(checkTakenUsername(P, playerIndex, username))
     {
       printf("That username is already taken by another current player. Please choose a different one.\n");
       username[0] = '\0';
     }
-    else if (checkPlayerListUsername(playerList, username))
+    else if(checkPlayerListUsername(playerList, username))
     {
       printf("That username already exists in the saved player list. Please choose a different one.\n");
+      username[0] = '\0';
+    }
+    else if(strlen(username) > 36)
+    {
+      printf("username can only be up to 36 characters. Please choose a different one.\n");
       username[0] = '\0';
     }
   } while (strlen(username) == 0 || strlen(username) > 36);
@@ -529,14 +547,19 @@ void displayTopDeck(struct Card drawnCard, struct Deck deck)
 int scoreOrSteal(struct Player player[], struct Card drawnCard, int playerIndex)
 {
   int choice;
-  do
-  {
+  int valid;
+
     printf("Player %d, what would you like to do?\n", playerIndex+1);
     printf("\t[1] Score\n \t[2] Steal\n");
     printf("Enter option: ");
-    scanf("%d", &choice);
-  } while (choice < 1 || choice > 2);
+    valid = scanf("%d", &choice);
 
+  while (valid != 1 || choice < 1 || choice > 2)
+  {
+    printf("Invalid input! Enter a number from (1-2): ");
+    while (getchar() != '\n'); 
+    valid = scanf("%d", &choice);
+  }
   printf("\n");
 
   return choice;
@@ -591,10 +614,10 @@ void tryToScore(struct Player player[], struct Card drawnCard, int playerIndex)
 int getPlayerToSteal(struct Player player[], int playerIndex, int nPlayers)
 {
   int i;
-  int j = 1;
+  int j = 1; // player number
   int nChoice;
   int index[nPlayers-1]; // store player number to steal from
-
+  int valid;
 
   printf("\nWho would you like to steal from?\n");
   for(i = 0; i < nPlayers; i++)
@@ -612,12 +635,15 @@ int getPlayerToSteal(struct Player player[], int playerIndex, int nPlayers)
   // {
   //   printf("[%d] Player %d\n", i, index[i]);
   // }
+  printf("Enter option: ");
+  valid = scanf("%d", &nChoice);
 
-  do
+  while (valid != 1 || nChoice < 1 || nChoice > nPlayers-1)
   {
-    printf("Enter option: ");
-    scanf("%d", &nChoice);
-  } while (nChoice < 1 || nChoice > nPlayers-1);
+    printf("Invalid input! Enter a number from 1 to %d: ", nPlayers - 1);
+    while (getchar() != '\n'); 
+    valid = scanf("%d", &nChoice);
+  }
 
   printf("player %d was chosen to be stolen from\n\n", index[nChoice-1]);
 
@@ -714,13 +740,16 @@ int returnWinnerIndex(struct Player player[], int nPlayers, struct Deck deck)
  */
 void setWinningPoints(int *nWinningPoints)
 {
-  printf("Set minimum number of points required to win the game: ");
-  scanf("%d", nWinningPoints); 
+  int valid;
 
-  while(*nWinningPoints <= 0)
+  printf("Set minimum number of points required to win the game: ");
+  valid = scanf("%d", nWinningPoints); 
+
+  while(valid != 1 || *nWinningPoints <= 0)
   {
     printf("Invalid input. Please enter a positive integer: ");
-    scanf("%d", nWinningPoints);
+    while (getchar() != '\n');
+    valid = scanf("%d", nWinningPoints); 
   }
 }
 /**
@@ -729,8 +758,17 @@ void setWinningPoints(int *nWinningPoints)
  */
 void setShuffleSeed(int *seed)
 {
+  int valid;
+
   printf("set shuffle seed (0 for random): ");
-  scanf("%d", seed);
+  valid = scanf("%d", seed);
+
+  while(valid != 1)
+  {
+    printf("Invalid input! Enter an integer: ");
+    while (getchar() != '\n');
+    valid = scanf("%d", seed);
+  }
 }
 
 /**
@@ -747,12 +785,19 @@ void displaySettings()
 int getSettingsChoice()
 {
   int nChoice;
+  int valid;
+
   displaySettings();
-  do 
+  printf("Enter option: ");
+  valid = scanf("%d", &nChoice);
+
+  while (valid != 1 || nChoice < 0 || nChoice > 2)
   {
-    printf("Enter option: ");
-    scanf("%d", &nChoice);
-  } while (nChoice < 0 || nChoice > 2);
+    printf("Invalid input! Enter a number from 0 to 2: ");
+    while (getchar() != '\n'); 
+    valid = scanf("%d", &nChoice);
+  }
+
   return nChoice;
 }
 
@@ -920,12 +965,19 @@ void displayStatistics()
 int getStatisticsChoice()
 {
   int nChoice;
+  int valid;
+
   displayStatistics();
-  do 
+  printf("Enter option: ");
+  valid = scanf("%d", &nChoice);
+
+  while (valid != 1 || nChoice < 0 || nChoice > 2)
   {
-    printf("Enter option: ");
-    scanf("%d", &nChoice);
-  } while (nChoice < 0 || nChoice > 2);
+    printf("Invalid input! Enter a number from 0 to 2: ");
+    while (getchar() != '\n'); 
+    valid = scanf("%d", &nChoice);
+  }
+  
   return nChoice;
 }
 

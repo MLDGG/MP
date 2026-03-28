@@ -7,4 +7,3 @@ lemon 1 19
 winkeuu 4 13
 vibe 0 1
 Wak 0 0
-test 0 0
