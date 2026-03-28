@@ -112,18 +112,10 @@ int getNumberOfPlayers()
  */
 void initializePlayers(struct Player players[], int nPlayers, struct PlayerList playerList)
 {
-  // char names[][37] = {"MLDG", "yatsfr", "vibe", "winkeuu", "lemon", "wak", "XxmariconxX", "yoshi"};
   int i;
   for (i = 0; i < nPlayers; i++)
   {
-    // initialize game players with username from players.txt 
-    if(i < nPlayers - 1){
-    strcpy(players[i].username, playerList.players[i].username);
-    }
-    else
-    {
-      strcpy(players[i].username, ""); // last player is the new player, so username is empty string for now
-    }
+    strcpy(players[i].username, ""); 
 
     players[i].nHand = 0;   // player has 0 hand cards
     players[i].score = 0;   // player has score of 0
@@ -137,7 +129,7 @@ void initializePlayers(struct Player players[], int nPlayers, struct PlayerList 
 
 
 /**
-* Displays the players username and player number, with the last player as "?"
+* Displays the players username and player number
 * @param P the player array
 * @param nPlayers the number of players
 */
@@ -145,29 +137,36 @@ void displayPlayers(struct Player P[], int nPlayers)
 {
 	int i;
 	
-	for(i = 0; i < nPlayers-1; i++)
+	for(i = 0; i < nPlayers; i++)
 	{
 		printf("P%d: %s\n", i+1, P[i].username);
 	}
-	
-	printf("P%d: ?\n", i+1);
+}
 
+/**
+* Displays the player username and player number
+* @param P the player array
+* @param playerIndex contains the current player index
+*/
+void displayPlayer(struct Player P[], int playerIndex)
+{
+		printf("P%d: %s\n", playerIndex + 1, P[playerIndex].username);
 }
 
 /**
 * Displays the list of players from players.txt for the user 
 *to choose from, with  the option to add a new player as option 0
 * @param playerList the list of players loaded from players.txt
-* @param nPlayers the number of players
+* @param playerIndex is the current player index
 */
-void displayPlayerList(struct PlayerList playerList, int nPlayers)
+void displayPlayerList(struct PlayerList playerList, int playerIndex)
 {
   int i;
   int j = 1;
 
-  printf("\nSelect Player %d: \n", nPlayers);
+  printf("\nSelect Player %d: \n", playerIndex + 1);
   printf("[0] <Add new Player>\n");
-  for(i = nPlayers-1; i < playerList.nLoadedPlayers; i++)
+  for(i = 0; i < playerList.nLoadedPlayers; i++)
   {
     printf("[%d] %s\n", j, playerList.players[i].username);
     j++;
@@ -188,7 +187,7 @@ int getPlayerChoiceFromList(int nPlayers, struct PlayerList playerList)
   {
     printf("Enter option: ");
     scanf("%d", &choice);
-  } while (choice < 0 || choice > playerList.nLoadedPlayers - nPlayers + 1);
+  } while (choice < 0 || choice > playerList.nLoadedPlayers + 1);
 
   return choice;
 }
@@ -196,28 +195,97 @@ int getPlayerChoiceFromList(int nPlayers, struct PlayerList playerList)
 /**
 * if user picks from the existing list of players, initialize the new player with the existing player's username from players.txt
 * @param P the player array
-* @param nPlayers the number of players
 * @param playerList the list of players loaded from players.txt
+* @param playerIndex contains the current player index
 * @param choice the user's choice for player username from the displayed player list
 */
-void isExistingPlayer(struct Player P[], struct PlayerList playerList, int nPlayers, int choice)
+void isExistingPlayer(struct Player P[], struct PlayerList playerList, int playerIndex, int choice)
 {
- strcpy(P[nPlayers-1].username, playerList.players[choice+nPlayers-2].username); // initialize new player with existing player username from players.txt (check if there is a better way to do this without complicated formula for indexing)
- printf("Player %d: %s\n", nPlayers, P[nPlayers-1].username);
+ strcpy(P[playerIndex].username, playerList.players[choice - 1].username);
+ printf("Player %d: %s\n", playerIndex + 1, P[playerIndex].username);
 }
 
 /**
-* adds a new player to the players.txt file and initializes the new player with the new player's username
+* checks if a username is already taken
 * @param P the player array
-* @param playerList the list of players loaded from players.txt
-* @param nPlayers the number of players
+* @param playerIndex contains the current player index
+* @param username is an array containing the username to be checked
 */
-void addNewPlayer(struct Player P[], struct PlayerList* playerList, int nPlayers)
+int checkTakenUsername(struct Player P[], int playerIndex, char username[])
+{
+  int found = 0;
+
+  for (int i = 0; i < playerIndex; i++)
+  {
+    if (strcmp(P[i].username, username) == 0)
+    {
+      found = 1;
+    }
+  }
+  return found;
+}
+
+/**
+* checks if a username will be duplicated in the list of players
+* @param playerList the list of players loaded from players.txt
+* @param username contains the username to be checked
+*/
+int checkPlayerListUsername(struct PlayerList *playerList, char username[])
+{
+  int found = 0;
+  for (int i = 0; i < playerList->nLoadedPlayers; i++)
+  {
+    if (strcmp(playerList->players[i].username, username) == 0)
+    {
+      found = 1;
+    }
+  }
+  return found;
+}
+
+/**
+ * gets the username of the new player
+ * @param P the player array
+ * @param playerIndex contains the current player index
+ * @param playerList is the list of players loaded from players.txt
+ * @param username is an array where the username will be stored
+ */
+void getUsername(struct Player P[], int playerIndex, struct PlayerList *playerList, char username[])
+{
+  do
+  {
+    printf("New player username: ");
+    scanf("%36s", username);
+
+    if (strlen(username) == 0)
+    {
+      printf("Username cannot be empty. Try again.\n");
+    }
+    else if (checkTakenUsername(P, playerIndex, username))
+    {
+      printf("That username is already taken by another current player. Please choose a different one.\n");
+      username[0] = '\0';
+    }
+    else if (checkPlayerListUsername(playerList, username))
+    {
+      printf("That username already exists in the saved player list. Please choose a different one.\n");
+      username[0] = '\0';
+    }
+  } while (strlen(username) == 0 || strlen(username) > 36);
+}
+
+/**
+ * add new player and add it to the list of players.
+ * @param P the player array
+ * @param playerList is the list of players loaded from players.txt
+ * @param playerIndex contains the current player index
+ */
+void addNewPlayer(struct Player P[], struct PlayerList* playerList, int playerIndex)
 {
   FILE *fptr;
-  int i = 0;
-  getUsername(&P[nPlayers-1]); // get username of new player
-   printf("Player %d: %s\n", nPlayers, P[nPlayers-1].username);
+
+  getUsername(P, playerIndex, playerList, P[playerIndex].username); // get unique username for new player 
+  printf("Player %d: %s\n", playerIndex + 1, P[playerIndex].username);
 
   fptr = fopen("players.txt", "a");
   if (fptr == NULL)
@@ -225,25 +293,19 @@ void addNewPlayer(struct Player P[], struct PlayerList* playerList, int nPlayers
     printf("File does not exist!\n");
   }
 
-  fprintf(fptr, "\n%s %d %d", P[nPlayers-1].username, 0, 0);
-
+  fprintf(fptr, "\n%s %d %d", P[playerIndex].username, 0, 0); // adds new player to the file
   fclose(fptr);
+
+  if (playerList != NULL) // updates playerList
+  {
+    strcpy(playerList->players[playerList->nLoadedPlayers].username, P[playerIndex].username);
+    playerList->players[playerList->nLoadedPlayers].numWins = 0;
+    playerList->players[playerList->nLoadedPlayers].highScore = 0;
+    playerList->nLoadedPlayers++;
+  }
 }
 
-/**
- * gets the username of the new player and updates the player struct with the username
- * @param pPlayers The player array
- */
-void getUsername(struct Player *pPlayer)
-{
-  char username[37];
-  do
-  {
-    printf("New player username: ");
-    scanf("%s", username);
-  } while (strlen(username) > 36);
-  strcpy(pPlayer->username, username);
-}
+
 
 /**
 * loads the players from players.txt and returns the number of players loaded
