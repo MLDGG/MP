@@ -420,7 +420,7 @@ struct Card drawTopCard(struct Deck *ptrDeck)
 
   struct Card topCard = ptrDeck->cards[0]; // Get the top card
   // Shift the remaining cards up
-  for (int i = 0; i < ptrDeck->nCards - 1; i++)
+  for (i = 0; i < ptrDeck->nCards - 1; i++)
   {
     ptrDeck->cards[i] = ptrDeck->cards[i + 1];
   }
@@ -477,7 +477,7 @@ void dealTank(struct Player players[], int nPlayers, struct Deck *ptrDeck)
 
   for(i = 0; i < nPlayers; i++)
   {
-    for( j = 0; j < 4; j++)
+    for(j = 0; j < 4; j++)
     {
       drawnCard = drawTopCard(ptrDeck);
       players[i] = addCardToHand(players[i], drawnCard);
@@ -544,7 +544,8 @@ int checkIfColorExist(struct Player player[], struct Card drawnCard, int playerI
  */
 void displayPlayerCards(struct Player Player[], int nPlayers)
 {
-  for(int i = 0; i < nPlayers; i++)
+  int i;
+  for(i = 0; i < nPlayers; i++)
   {
     printf("---------------------------------------------------------------------\n");
     iSetColor(I_COLOR_WHITE);
@@ -1025,8 +1026,9 @@ void displayCoodinates(Coordinate points[], int arrSize)
 {
   // NOTE: This file includes defs.h, which provides access to the
   //       Coordinate structure definition.
-
-  for (int i = 0; i < arrSize; i++)
+  int i;
+	
+  for (i = 0; i < arrSize; i++)
     printf("(%d, %d)  ", points[i].x, points[i].y);
 
   printf("\n\n");
