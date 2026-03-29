@@ -1,8 +1,9 @@
 /******************************************************************************
  *  Description     : <short description of the file>
- *  Author/s        : <student1 full name (last name, first name)>
- *                    <student2 full name (last name, first name)>
- *  Section         : <your section>
+ *  Author/s        : <De Guzman, Mavrick>
+ *                    <Morin, Eliana>
+ *  Section         : <S13A>
+ *  Last Modified   : <29/03/2026>
  *  Last Modified   : <date when last revision was made>
  ******************************************************************************/
 
