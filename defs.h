@@ -1,5 +1,10 @@
 /******************************************************************************
- *  Description     : <short description of the file>
+ *  Description     : This file contains the core data structure definitions
+                       and constants used throughout the Mantis card game program.
+                       It defines structures for cards, decks, players, player lists, 
+                       and basic utility structures such as coordinates and dates, 
+                       allowing consistent data organization and sharing across 
+                       multiple source files through modular programming.
  *  Author/s        : <student1 full name (last name, first name)>
  *                    <student2 full name (last name, first name)>
  *  Section         : <your section>
