@@ -1,9 +1,17 @@
 /******************************************************************************
- *  Description     : <short description of the project>
+ *  Description     : This program is a C-based implementation of the Mantis 
+ 						card game where 3–6 players compete by drawing cards 
+						from a shuffled deck loaded from mantis.txt and choosing
+						whether to score points or steal cards from opponents. 
+						Player information such as usernames, number of wins, and 
+						high scores are stored and updated using players.txt . 
+						The project demonstrates the use of structures, arrays, 
+						file handling, and modular programming while allowing users 
+						to configure settings like the winning score and shuffle seed.
  *  Author/s        : <De Guzman, Mavrick>
- *                    <student2 full name (last name, first name)>
+ *                    <Morin, Eliana>
  *  Section         : <S13A>
- *  Last Modified   : <23/02/2026>
+ *  Last Modified   : <29/03/2026>
  *  Acknowledgments : <list of references used in the making of this project>
  ******************************************************************************/
 
@@ -51,7 +59,7 @@ int main()
 	
     switch (menuChoice)
 	{
-  // terminate program  
+  	// terminate program  
 	case 0:
 	  break;
 	
