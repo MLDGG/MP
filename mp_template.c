@@ -22,13 +22,6 @@
 #include "helpers_2.c"
 #include "helpers_1.c"
 
-
-/* ----- definitions (i.e., constants, typedefs, structs) ----- */
-
-/* ----- function implementations ----- */
-
-
-
 int main()
 {
  
@@ -110,44 +103,20 @@ int main()
 	
 	    deck.nCards = loadDeck(&deck); // load deck from mantis.txt
 	
-	    // // for checking if deck loaded correctly
-	    // for(int i = 0; i < deck.nCards; i++)
-	    // {
-	    //   printf("%c %s %d\n", deck.cards[i].front, deck.cards[i].back, deck.cards[i].points);
-	    // }
-	
 	    shuffleDeck(&deck, seed);
-	
-	    //   // for checking if deck shuffled correctly
-	    //     printf("shuffled deck:\n");
-	
-	    //   for(int i = 0; i < deck.nCards; i++)
-	    // {
-	    //   printf("%c | %s %d\n", deck.cards[i].front, deck.cards[i].back, deck.cards[i].points);
-	    // }
-	
 	    displayPlayerCards(P, numPlayers);
 	    dealTank(P, numPlayers, &deck);
-	
-	    //   // for checking if dealt cards  correctly
-	    //   for(int i = 0; i < deck.nCards; i++)
-	    // {
-	    //   printf("%c | %s %d\n", deck.cards[i].front, deck.cards[i].back, deck.cards[i].points);
-	    // }
-	
-	
-	      printf("\nAfter dealing tank:\n");
-	      displayPlayerCards(P, numPlayers);
+	      
+		printf("\nAfter dealing tank:\n");
+	    displayPlayerCards(P, numPlayers);
 	
 	
 	    /* GAME LOOP */
 	  	while(checkIfWin(P, numPlayers, deck, winningPoints) == 0)
 	  	{
-		    // printf("Remaining cards in deck: %d\n", deck.nCards);
 		    drawnCard = drawTopCard(&deck); // draw card
 		    displayTopDeck(drawnCard, deck); // display drawn card
 		
-		    //printf("Top card: %c | %s %d\n", drawnCard.front, drawnCard.back, drawnCard.points);
 		    turnChoice = scoreOrSteal(P, drawnCard, playerTurn); // get user choice if score or steam
 		    
 		    if(turnChoice == 1) // if score
@@ -251,6 +220,6 @@ int main()
  * that I/we have not copied in part or whole or otherwise plagiarized the work of other
  * students and/or persons, nor did I employ the use of AI in any part of the deliverable.
  *
- * <student1 full name (De Guzman, Mavrick)> (DLSU ID# 12541907)
- * <student2 full name (last name, first name)> (DLSU ID# <number>)
+ * <student1 full name <De Guzman, Mavrick> (DLSU ID# 12541907)
+ * <student2 full name <Morin, Eliana> (DLSU ID# 12506133)
  */
