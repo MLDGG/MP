@@ -24,6 +24,9 @@
 #include "defs.h"
 #include "interface.c"
 
+/*====================================================
+  COLOR UTILITIES
+====================================================*/
 
 /**
  * changes color to index for use in isetcolor function
@@ -47,6 +50,33 @@ int colorInterface(char color)
     }
     return idx;
 }
+
+/**
+ * converts the color of the front card to index
+ * @param frontCard the front card color
+ * @returns the index of the color
+ */
+int colorToIndex(char frontCard)
+{
+    int idx;
+
+    switch(frontCard)
+    {
+        case 'R': idx = 0; break;
+        case 'O': idx = 1; break;
+        case 'Y': idx = 2; break;
+        case 'G': idx = 3; break;
+        case 'B': idx = 4; break;
+        case 'I': idx = 5; break;
+        case 'V': idx = 6; break;
+        default:  idx = 0; break;
+    }
+    return idx;
+}
+
+/*====================================================
+  MAIN MENU
+====================================================*/
 
 /**
  * Displays the main menu options
@@ -75,6 +105,81 @@ void getPlayerChoice(int *nChoice)
     valid = scanf("%d", nChoice);
   }
 }
+
+/*====================================================
+  SETTINGS
+====================================================*/
+/**
+ * displays settings interface
+ */
+void displaySettings()
+{
+  printf("Settings\n\t[1] Set Winning Points\n\t[2] Set Shuffle Seed\n\t[0] Back to Main Menu\n");
+}
+
+/**
+ * get user's input for settings choice 
+ */
+int getSettingsChoice()
+{
+  int nChoice;
+  int valid;
+
+  displaySettings();
+  printf("Enter option: ");
+  valid = scanf("%d", &nChoice);
+
+  while (valid != 1 || nChoice < 0 || nChoice > 2)
+  {
+    printf("Invalid input! Enter a number from 0 to 2: ");
+    while (getchar() != '\n'); 
+    valid = scanf("%d", &nChoice);
+  }
+
+  return nChoice;
+}
+
+/**
+ * prompts user to set minimum number of points required to win the game
+ * @param nWinningPoints pointer to store the minimum number of points required to win the game
+ */
+void setWinningPoints(int *nWinningPoints)
+{
+  int valid;
+
+  printf("Set minimum number of points required to win the game: ");
+  valid = scanf("%d", nWinningPoints); 
+
+  while(valid != 1 || *nWinningPoints <= 0)
+  {
+    printf("Invalid input. Please enter a positive integer: ");
+    while (getchar() != '\n');
+    valid = scanf("%d", nWinningPoints); 
+  }
+}
+
+/**
+ * prompts the user to set shuffle seed
+ * @param seed contains the shuffle seed
+ */
+void setShuffleSeed(int *seed)
+{
+  int valid;
+
+  printf("set shuffle seed (0 for random): ");
+  valid = scanf("%d", seed);
+
+  while(valid != 1)
+  {
+    printf("Invalid input! Enter an integer: ");
+    while (getchar() != '\n');
+    valid = scanf("%d", seed);
+  }
+}
+
+/*====================================================
+  PLAYER SETUP
+====================================================*/
 
 /**
  * Determines the number of players (between 3 and 6)
@@ -146,12 +251,17 @@ void displayPlayer(struct Player P[], int playerIndex)
 		printf("P%d: %s\n", playerIndex + 1, P[playerIndex].username);
 }
 
+/*====================================================
+  PLAYER LIST MANAGEMENT
+====================================================*/
+
 /**
 * Displays the list of players from players.txt for the user 
 *to choose from, with  the option to add a new player as option 0
 * @param playerList the list of players loaded from players.txt
 * @param playerIndex is the current player index
 */
+
 void displayPlayerList(struct PlayerList playerList, int playerIndex)
 {
   int i;
@@ -304,7 +414,9 @@ void addNewPlayer(struct Player P[], struct PlayerList* playerList, int playerIn
   }
 }
 
-
+/*====================================================
+  FILE LOADING
+====================================================*/
 
 /**
 * loads the players from players.txt and returns the number of players loaded
@@ -353,6 +465,10 @@ int loadDeck(struct Deck *deck)
 
   return i;
 }
+
+/*====================================================
+  DECK FUNCTIONS
+====================================================*/
 
 /**
  * shuffles the deck of cards
@@ -419,6 +535,10 @@ struct Card drawTopCard(struct Deck *ptrDeck)
   return topCard; // Return the drawn card
 }
 
+/*====================================================
+  CARD / TANK MANAGEMENT
+====================================================*/
+
 /**
  * adds the drawn card to the player's hand 
  * @param player is the player struct 
@@ -475,28 +595,10 @@ void dealTank(struct Player players[], int nPlayers, struct Deck *ptrDeck)
     }
   }
 }
-/**
- * converts the color of the front card to index
- * @param frontCard the front card color
- * @returns the index of the color
- */
-int colorToIndex(char frontCard)
-{
-    int idx;
 
-    switch(frontCard)
-    {
-        case 'R': idx = 0; break;
-        case 'O': idx = 1; break;
-        case 'Y': idx = 2; break;
-        case 'G': idx = 3; break;
-        case 'B': idx = 4; break;
-        case 'I': idx = 5; break;
-        case 'V': idx = 6; break;
-        default:  idx = 0; break;
-    }
-    return idx;
-}
+/*====================================================
+  GAMEPLAY
+====================================================*/
 
 /**
  * checks if the player has the same color card as the drawn card
@@ -609,6 +711,10 @@ void tryToScore(struct Player player[], struct Card drawnCard, int playerIndex)
   }
 }
 
+/*====================================================
+  STEAL MECHANICS
+====================================================*/
+
 /**
  * prompts the player to choose which player to steal from
  * @param player is the player array
@@ -696,6 +802,10 @@ void tryToSteal(struct Player player[], struct Card drawnCard, int playerIndex, 
 
 }
 
+/*====================================================
+  WIN CHECK
+====================================================*/
+
 /**
  * check if a player has a score of 20 or more, or if deck is empty
  * @param player is the player array
@@ -741,72 +851,9 @@ int returnWinnerIndex(struct Player player[], int nPlayers, struct Deck deck)
   return winnerIndex;
 }
 
-/**
- * prompts user to set minimum number of points required to win the game
- * @param nWinningPoints pointer to store the minimum number of points required to win the game
- */
-void setWinningPoints(int *nWinningPoints)
-{
-  int valid;
-
-  printf("Set minimum number of points required to win the game: ");
-  valid = scanf("%d", nWinningPoints); 
-
-  while(valid != 1 || *nWinningPoints <= 0)
-  {
-    printf("Invalid input. Please enter a positive integer: ");
-    while (getchar() != '\n');
-    valid = scanf("%d", nWinningPoints); 
-  }
-}
-/**
- * prompts the user to set shuffle seed
- * @param seed contains the shuffle seed
- */
-void setShuffleSeed(int *seed)
-{
-  int valid;
-
-  printf("set shuffle seed (0 for random): ");
-  valid = scanf("%d", seed);
-
-  while(valid != 1)
-  {
-    printf("Invalid input! Enter an integer: ");
-    while (getchar() != '\n');
-    valid = scanf("%d", seed);
-  }
-}
-
-/**
- * displays settings interface
- */
-void displaySettings()
-{
-  printf("Settings\n\t[1] Set Winning Points\n\t[2] Set Shuffle Seed\n\t[0] Back to Main Menu\n");
-}
-
-/**
- * get user's input for settings choice 
- */
-int getSettingsChoice()
-{
-  int nChoice;
-  int valid;
-
-  displaySettings();
-  printf("Enter option: ");
-  valid = scanf("%d", &nChoice);
-
-  while (valid != 1 || nChoice < 0 || nChoice > 2)
-  {
-    printf("Invalid input! Enter a number from 0 to 2: ");
-    while (getchar() != '\n'); 
-    valid = scanf("%d", &nChoice);
-  }
-
-  return nChoice;
-}
+/*====================================================
+  STATISTICS
+====================================================*/
 
 /**
  * saves player stats (number of wins and highest score) in playerList
