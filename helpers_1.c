@@ -1,13 +1,20 @@
 /******************************************************************************
- *  Description     : <short description of the file>
- *  Author/s        : <student1 full name (last name, first name)>
- *                    <student2 full name (last name, first name)>
- *  Section         : <your section>
- *  Last Modified   : <date when last revision was made>
+ *  Description     : This file contains the main helper functions used in the 
+ 						Mantis card game. It manages player setup, deck loading 
+						and shuffling, card drawing, scoring and stealing 
+						mechanics, win checking, statistics tracking, and settings 
+						configuration. It also handles file operations for loading 
+						and saving player data from players.txt and card data from
+						mantis.txt to support modular game logic and user interaction.
+ *  Author/s        : <De Guzman, Mavrick>
+ *                    <Morin, Eliana>
+ *  Section         : <S13A>
+ *  Last Modified   : <29/03/2026>
+ *  Acknowledgments : <list of references used in the making of this project>
  ******************************************************************************/
 
-#ifndef HELPERS_1_C // Include this to prevent redefinition error
-#define HELPERS_1_C // Include this to prevent redefinition error
+#ifndef HELPERS_1_C 
+#define HELPERS_1_C 
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,6 +24,7 @@
 #include "defs.h"
 #include "interface.c"
 
+/* ======================== COLOR FUNCTIONS ======================== */
 
 /**
  * changes color to index for use in isetcolor function
@@ -42,11 +50,40 @@ int colorInterface(char color)
 }
 
 /**
+ * converts the color of the front card to index
+ * @param frontCard the front card color
+ * @returns the index of the color
+ */
+int colorToIndex(char frontCard)
+{
+    int idx;
+
+    switch(frontCard)
+    {
+        case 'R': idx = 0; break;
+        case 'O': idx = 1; break;
+        case 'Y': idx = 2; break;
+        case 'G': idx = 3; break;
+        case 'B': idx = 4; break;
+        case 'I': idx = 5; break;
+        case 'V': idx = 6; break;
+        default:  idx = 0; break;
+    }
+    return idx;
+}
+
+/* ======================== MENU ======================== */
+
+/**
  * Displays the main menu options
  */
 void displayMainMenu()
 {
-  printf("Main Menu\n\t [1] New Game \n\t [2] Top Players \n\t [3] Settings \n\t [0] Exit\n");
+    printf("Main Menu\n");
+    printf("\t[1] New Game\n");
+    printf("\t[2] Top Players\n");
+    printf("\t[3] Settings\n");
+    printf("\t[0] Exit\n");
 }
 
 /**
@@ -90,6 +127,8 @@ int getNumberOfPlayers()
   return nPlayers;
 }
 
+/* ======================== PLAYER SETUP ======================== */
+
 /**
  * Initializes the list of players, wherein each player has 0 hand cards, 0 tank cards, and 0 score, and their player number
  * @param players The player array
@@ -99,6 +138,8 @@ int getNumberOfPlayers()
 void initializePlayers(struct Player players[], int nPlayers, struct PlayerList playerList)
 {
   int i;
+  int j;
+	
   for (i = 0; i < nPlayers; i++)
   {
     strcpy(players[i].username, ""); 
@@ -106,7 +147,7 @@ void initializePlayers(struct Player players[], int nPlayers, struct PlayerList 
     players[i].nHand = 0;   // player has 0 hand cards
     players[i].score = 0;   // player has score of 0
     players[i].playerNum = i+1; // player number (1-6)
-    for(int j = 0; j < 7; j++)
+    for(j = 0; j < 7; j++)
     {
       players[i].tank[j] = 0;
     }
@@ -184,19 +225,6 @@ int getPlayerChoiceFromList(int nPlayers, struct PlayerList playerList)
 }
 
 /**
-* if user picks from the existing list of players, initialize the new player with the existing player's username from players.txt
-* @param P the player array
-* @param playerList the list of players loaded from players.txt
-* @param playerIndex contains the current player index
-* @param choice the user's choice for player username from the displayed player list
-*/
-void isExistingPlayer(struct Player P[], struct PlayerList playerList, int playerIndex, int choice)
-{
- strcpy(P[playerIndex].username, playerList.players[choice - 1].username);
- printf("Player %d: %s\n", playerIndex + 1, P[playerIndex].username);
-}
-
-/**
 * checks if a username is already taken
 * @param P the player array
 * @param playerIndex contains the current player index
@@ -205,8 +233,9 @@ void isExistingPlayer(struct Player P[], struct PlayerList playerList, int playe
 int checkTakenUsername(struct Player P[], int playerIndex, char username[])
 {
   int found = 0;
+  int i;
 
-  for (int i = 0; i < playerIndex; i++)
+  for (i = 0; i < playerIndex; i++)
   {
     if (strcmp(P[i].username, username) == 0)
     {
@@ -224,7 +253,9 @@ int checkTakenUsername(struct Player P[], int playerIndex, char username[])
 int checkPlayerListUsername(struct PlayerList *playerList, char username[])
 {
   int found = 0;
-  for (int i = 0; i < playerList->nLoadedPlayers; i++)
+  int i;
+
+  for (i = 0; i < playerList->nLoadedPlayers; i++)
   {
     if (strcmp(playerList->players[i].username, username) == 0)
     {
@@ -232,6 +263,19 @@ int checkPlayerListUsername(struct PlayerList *playerList, char username[])
     }
   }
   return found;
+}
+
+/**
+* if user picks from the existing list of players, initialize the new player with the existing player's username from players.txt
+* @param P the player array
+* @param playerList the list of players loaded from players.txt
+* @param playerIndex contains the current player index
+* @param choice the user's choice for player username from the displayed player list
+*/
+void isExistingPlayer(struct Player P[], struct PlayerList playerList, int playerIndex, int choice)
+{
+ strcpy(P[playerIndex].username, playerList.players[choice - 1].username);
+ printf("Player %d: %s\n", playerIndex + 1, P[playerIndex].username);
 }
 
 /**
@@ -243,6 +287,7 @@ int checkPlayerListUsername(struct PlayerList *playerList, char username[])
  */
 void getUsername(struct Player P[], int playerIndex, struct PlayerList *playerList, char username[])
 {
+
   do
   {
     printf("New player username: ");
@@ -298,6 +343,7 @@ void addNewPlayer(struct Player P[], struct PlayerList* playerList, int playerIn
 }
 
 
+/* ======================== FILE LOADING ======================== */
 
 /**
 * loads the players from players.txt and returns the number of players loaded
@@ -347,6 +393,8 @@ int loadDeck(struct Deck *deck)
   return i;
 }
 
+/* ======================== DECK FUNCTIONS ======================== */
+
 /**
  * shuffles the deck of cards
  * @param deck is a pointer to the deck
@@ -359,38 +407,6 @@ void shuffleDeck(struct Deck *deck, int seed)
     seed = randomInt();
   }
   shuffle(&deck->cards, 84, sizeof(struct Card), seed);
-}
-
-/**
- * displays the player's cards (tank) and score
- * @param Player the player array
- * @param nPlayers the number of players
- */
-void displayPlayerCards(struct Player Player[], int nPlayers)
-{
-  for(int i = 0; i < nPlayers; i++)
-  {
-    printf("---------------------------------------------------------------------\n");
-    iSetColor(I_COLOR_WHITE);
-    printf("player %d => [",i+1);
-    iSetColor(I_COLOR_RED);
-    printf("R:%d | ", Player[i].tank[0]);
-    iSetColor(I_COLOR_WHITE);
-    printf("O:%d | ", Player[i].tank[1]);
-    iSetColor(I_COLOR_YELLOW);
-    printf("Y:%d | ", Player[i].tank[2]);
-    iSetColor(I_COLOR_GREEN);
-    printf("G:%d | ", Player[i].tank[3]);
-    iSetColor(I_COLOR_BLUE);
-    printf("B:%d | ", Player[i].tank[4]);
-    iSetColor(I_COLOR_CYAN);
-    printf("I:%d | ", Player[i].tank[5]);
-    iSetColor(I_COLOR_PURPLE);
-    printf("V:%d ] ", Player[i].tank[6]);
-    iSetColor(I_COLOR_WHITE);
-    printf("// %d \n", Player[i].score);
-    printf("---------------------------------------------------------------------\n");
-  }
 }
 
 /**
@@ -468,46 +484,6 @@ void dealTank(struct Player players[], int nPlayers, struct Deck *ptrDeck)
     }
   }
 }
-/**
- * converts the color of the front card to index
- * @param frontCard the front card color
- * @returns the index of the color
- */
-int colorToIndex(char frontCard)
-{
-    int idx;
-
-    switch(frontCard)
-    {
-        case 'R': idx = 0; break;
-        case 'O': idx = 1; break;
-        case 'Y': idx = 2; break;
-        case 'G': idx = 3; break;
-        case 'B': idx = 4; break;
-        case 'I': idx = 5; break;
-        case 'V': idx = 6; break;
-        default:  idx = 0; break;
-    }
-    return idx;
-}
-
-/**
- * checks if the player has the same color card as the drawn card
- * @param player is the player array
- * @param drawnCard is the card drawn from the deck
- * @param playerIndex is the index of the player in the player array
- * @returns 1 if the player has a card of the same color as the drawn card, 0 otherwise
- */
-int checkIfColorExist(struct Player player[], struct Card drawnCard, int playerIndex)
-{
-  int bool = 0;
-  int colorIndex = colorToIndex(drawnCard.front);
-  if(player[playerIndex].tank[colorIndex] > 0)
-  {
-    bool = 1;
-  }
-  return bool;
-}
 
 /**
  * displays the drawn card (the top card of the deck) and the number of cards remaining in the deck
@@ -535,6 +511,62 @@ void displayTopDeck(struct Card drawnCard, struct Deck deck)
   printf(" (%d cards remaining in deck)\n\n", deck.nCards);
 
   // printf("\nTop Deck: %s (%d cards remaining in deck)\n\n", drawnCard.back, deck.nCards);
+}
+
+/* ======================== GAME LOGIC ======================== */
+/**
+ * checks if the player has the same color card as the drawn card
+ * @param player is the player array
+ * @param drawnCard is the card drawn from the deck
+ * @param playerIndex is the index of the player in the player array
+ * @returns 1 if the player has a card of the same color as the drawn card, 0 otherwise
+ */
+int checkIfColorExist(struct Player player[], struct Card drawnCard, int playerIndex)
+{
+  int bool = 0;
+  int colorIndex = colorToIndex(drawnCard.front);
+  if(player[playerIndex].tank[colorIndex] > 0)
+  {
+    bool = 1;
+  }
+  return bool;
+}
+
+  printf("Player %d wins with a score of %d points!\n\n", winnerIndex+1, player[winnerIndex].score);
+
+  return winnerIndex;
+}
+
+/**
+ * displays the player's cards (tank) and score
+ * @param Player the player array
+ * @param nPlayers the number of players
+ */
+void displayPlayerCards(struct Player Player[], int nPlayers)
+{
+  for(int i = 0; i < nPlayers; i++)
+  {
+    printf("---------------------------------------------------------------------\n");
+    iSetColor(I_COLOR_WHITE);
+    printf("player %d => [",i+1);
+    iSetColor(I_COLOR_RED);
+    printf("R:%d | ", Player[i].tank[0]);
+    iSetColor(I_COLOR_WHITE);
+    printf("O:%d | ", Player[i].tank[1]);
+    iSetColor(I_COLOR_YELLOW);
+    printf("Y:%d | ", Player[i].tank[2]);
+    iSetColor(I_COLOR_GREEN);
+    printf("G:%d | ", Player[i].tank[3]);
+    iSetColor(I_COLOR_BLUE);
+    printf("B:%d | ", Player[i].tank[4]);
+    iSetColor(I_COLOR_CYAN);
+    printf("I:%d | ", Player[i].tank[5]);
+    iSetColor(I_COLOR_PURPLE);
+    printf("V:%d ] ", Player[i].tank[6]);
+    iSetColor(I_COLOR_WHITE);
+    printf("// %d \n", Player[i].score);
+    printf("---------------------------------------------------------------------\n");
+  }
 }
 
 /**
@@ -603,6 +635,44 @@ void tryToScore(struct Player player[], struct Card drawnCard, int playerIndex)
 }
 
 /**
+ * gets user input for which player to steal from, checks if the chosen player has the same color card as the drawn card,
+ * if the chosen player has the same color card, all those color card are added to the stealing player's tank.
+ * if the chosen player does not have the same color card, the drawn card is added to the chosen player's hand (tank)
+ * @param player is the player array
+ * @param drawnCard is the card drawn from the deck
+ * @param playerIndex is the index of the player's turn in the player array
+ * @param nPlayers is the number of players
+ */
+void tryToSteal(struct Player player[], struct Card drawnCard, int playerIndex, int nPlayers)
+{
+  int colorIndex;
+  int nPlayerToStealFrom;
+
+  nPlayerToStealFrom = getPlayerToSteal(player, playerIndex, nPlayers); // get index of player to steal from
+  colorIndex = colorToIndex(drawnCard.front); //get index of card color in tank
+
+  if(checkIfColorExist(player, drawnCard, nPlayerToStealFrom-1) == 1) // if the drawn card color exists in the tank of the person you are stealing from
+  {
+    printf("Resolving turn for Player %d...\n", playerIndex+1); 
+    printf("- Drawn card revealed: %c (%d pt/s)!\n", drawnCard.front, drawnCard.points);
+    printf("- Player %d has (%d) %c card/s\n", nPlayerToStealFrom, player[nPlayerToStealFrom-1].tank[colorIndex], drawnCard.front);
+    player[nPlayerToStealFrom-1].tank[colorIndex]++; //add card to the player you are stealing from
+    printf("- +%d cards to Player %d's tank!\n\n", player[nPlayerToStealFrom-1].tank[colorIndex], playerIndex+1); 
+    player[playerIndex].tank[colorIndex] += player[nPlayerToStealFrom-1].tank[colorIndex]; // add all cards from the person you are stealing from to the stealer
+    player[nPlayerToStealFrom-1].tank[colorIndex] = 0; // stolen player now has zero of that card color
+  }
+  else //if stolen player has no card color of the drawn card
+  {
+    printf("Resolving turn for Player %d...\n", playerIndex+1);
+    printf("- Drawn card revealed: %c (%d pt/s)!\n", drawnCard.front, drawnCard.points);
+    printf("- Player %d has no %c cards...\n", nPlayerToStealFrom, drawnCard.front);
+    printf("- Adding drawn card to Player %d's tank\n\n", nPlayerToStealFrom);
+    player[nPlayerToStealFrom-1] = addCardToHand(player[nPlayerToStealFrom-1], drawnCard); //add drawn card to player to steal from
+  }
+
+}
+
+/**
  * prompts the player to choose which player to steal from
  * @param player is the player array
  * @param playerIndex is the index of the player in the player array
@@ -650,45 +720,6 @@ int getPlayerToSteal(struct Player player[], int playerIndex, int nPlayers)
   return index[nChoice-1]; // player number to steal from (minus 1 to match array index)
 }
 
-
-/**
- * gets user input for which player to steal from, checks if the chosen player has the same color card as the drawn card,
- * if the chosen player has the same color card, all those color card are added to the stealing player's tank.
- * if the chosen player does not have the same color card, the drawn card is added to the chosen player's hand (tank)
- * @param player is the player array
- * @param drawnCard is the card drawn from the deck
- * @param playerIndex is the index of the player's turn in the player array
- * @param nPlayers is the number of players
- */
-void tryToSteal(struct Player player[], struct Card drawnCard, int playerIndex, int nPlayers)
-{
-  int colorIndex;
-  int nPlayerToStealFrom;
-
-  nPlayerToStealFrom = getPlayerToSteal(player, playerIndex, nPlayers); // get index of player to steal from
-  colorIndex = colorToIndex(drawnCard.front); //get index of card color in tank
-
-  if(checkIfColorExist(player, drawnCard, nPlayerToStealFrom-1) == 1) // if the drawn card color exists in the tank of the person you are stealing from
-  {
-    printf("Resolving turn for Player %d...\n", playerIndex+1); 
-    printf("- Drawn card revealed: %c (%d pt/s)!\n", drawnCard.front, drawnCard.points);
-    printf("- Player %d has (%d) %c card/s\n", nPlayerToStealFrom, player[nPlayerToStealFrom-1].tank[colorIndex], drawnCard.front);
-    player[nPlayerToStealFrom-1].tank[colorIndex]++; //add card to the player you are stealing from
-    printf("- +%d cards to Player %d's tank!\n\n", player[nPlayerToStealFrom-1].tank[colorIndex], playerIndex+1); 
-    player[playerIndex].tank[colorIndex] += player[nPlayerToStealFrom-1].tank[colorIndex]; // add all cards from the person you are stealing from to the stealer
-    player[nPlayerToStealFrom-1].tank[colorIndex] = 0; // stolen player now has zero of that card color
-  }
-  else //if stolen player has no card color of the drawn card
-  {
-    printf("Resolving turn for Player %d...\n", playerIndex+1);
-    printf("- Drawn card revealed: %c (%d pt/s)!\n", drawnCard.front, drawnCard.points);
-    printf("- Player %d has no %c cards...\n", nPlayerToStealFrom, drawnCard.front);
-    printf("- Adding drawn card to Player %d's tank\n\n", nPlayerToStealFrom);
-    player[nPlayerToStealFrom-1] = addCardToHand(player[nPlayerToStealFrom-1], drawnCard); //add drawn card to player to steal from
-  }
-
-}
-
 /**
  * check if a player has a score of 20 or more, or if deck is empty
  * @param player is the player array
@@ -729,48 +760,7 @@ int returnWinnerIndex(struct Player player[], int nPlayers, struct Deck deck)
     }
   }
 
-  printf("Player %d wins with a score of %d points!\n\n", winnerIndex+1, player[winnerIndex].score);
-
-  return winnerIndex;
-}
-
-/**
- * prompts user to set minimum number of points required to win the game
- * @param nWinningPoints pointer to store the minimum number of points required to win the game
- */
-void setWinningPoints(int *nWinningPoints)
-{
-  int valid;
-
-  printf("Set minimum number of points required to win the game: ");
-  valid = scanf("%d", nWinningPoints); 
-
-  while(valid != 1 || *nWinningPoints <= 0)
-  {
-    printf("Invalid input. Please enter a positive integer: ");
-    while (getchar() != '\n');
-    valid = scanf("%d", nWinningPoints); 
-  }
-}
-/**
- * prompts the user to set shuffle seed
- * @param seed contains the shuffle seed
- */
-void setShuffleSeed(int *seed)
-{
-  int valid;
-
-  printf("set shuffle seed (0 for random): ");
-  valid = scanf("%d", seed);
-
-  while(valid != 1)
-  {
-    printf("Invalid input! Enter an integer: ");
-    while (getchar() != '\n');
-    valid = scanf("%d", seed);
-  }
-}
-
+/* ======================== SETTINGS ======================== */
 /**
  * displays settings interface
  */
@@ -798,6 +788,104 @@ int getSettingsChoice()
     valid = scanf("%d", &nChoice);
   }
 
+  return nChoice;
+}
+
+/**
+ * prompts user to set minimum number of points required to win the game
+ * @param nWinningPoints pointer to store the minimum number of points required to win the game
+ */
+void setWinningPoints(int *nWinningPoints)
+{
+  int valid;
+
+  printf("Set minimum number of points required to win the game: ");
+  valid = scanf("%d", nWinningPoints); 
+
+  while(valid != 1 || *nWinningPoints <= 0)
+  {
+    printf("Invalid input. Please enter a positive integer: ");
+    while (getchar() != '\n');
+    valid = scanf("%d", nWinningPoints); 
+  }
+}
+
+/**
+ * prompts the user to set shuffle seed
+ * @param seed contains the shuffle seed
+ */
+void setShuffleSeed(int *seed)
+{
+  int valid;
+
+  printf("set shuffle seed (0 for random): ");
+  valid = scanf("%d", seed);
+
+  while(valid != 1)
+  {
+    printf("Invalid input! Enter an integer: ");
+    while (getchar() != '\n');
+    valid = scanf("%d", seed);
+  }
+}
+
+/* ======================== STATISTICS ======================== */
+
+/**
+ * diplays player stats (number of wins)
+ * @param sorted contains the sorted player list 
+ */
+void displayPlayerWins(struct PlayerList sorted)
+{
+  int i;
+
+  for(i = 0; i < sorted.nLoadedPlayers; i++)
+  {
+    printf("%s %d\n", sorted.players[i].username, sorted.players[i].numWins);
+  }
+}
+
+/**
+ * diplays player stats (high scores)
+ * @param sorted contains the sorted player list 
+ */
+void displayPlayerScores(struct PlayerList sorted)
+{
+  int i;
+
+  for(i = 0; i < sorted.nLoadedPlayers; i++)
+  {
+    printf("%s %d\n", sorted.players[i].username, sorted.players[i].highScore);
+  }
+}
+
+/**
+ * Display statistics interface
+ */
+void displayStatistics()
+{
+  printf("View Statistics\n\t[1] Display Number of Wins\n\t[2] Display High Scores\n\t[0] Back to Main Menu\n");
+}
+
+/**
+ * get user's input for statistics choice 
+ */
+int getStatisticsChoice()
+{
+  int nChoice;
+  int valid;
+
+  displayStatistics();
+  printf("Enter option: ");
+  valid = scanf("%d", &nChoice);
+
+  while (valid != 1 || nChoice < 0 || nChoice > 2)
+  {
+    printf("Invalid input! Enter a number from 0 to 2: ");
+    while (getchar() != '\n'); 
+    valid = scanf("%d", &nChoice);
+  }
+  
   return nChoice;
 }
 
@@ -834,7 +922,6 @@ void savePlayerStats(struct Player player[], struct PlayerList* playerList, int 
       }
     }
   }
-
 }
 
 /**
@@ -861,6 +948,7 @@ void savePlayerFile(struct PlayerList PlayerList)
 
 }
 
+/* ======================== SORTING ======================== */
 
 /**
  * sorts PlayerWins in descending order
@@ -920,65 +1008,6 @@ void sortPlayerHighScore(struct PlayerList PlayerList, struct PlayerList* sorted
       sorted->players[max] = temp;
     }
   }
-}
-
-
-/**
- * diplays player stats (number of wins)
- * @param sorted contains the sorted player list 
- */
-void displayPlayerWins(struct PlayerList sorted)
-{
-  int i;
-
-  for(i = 0; i < sorted.nLoadedPlayers; i++)
-  {
-    printf("%s %d\n", sorted.players[i].username, sorted.players[i].numWins);
-  }
-}
-
-/**
- * diplays player stats (high scores)
- * @param sorted contains the sorted player list 
- */
-void displayPlayerScores(struct PlayerList sorted)
-{
-  int i;
-
-  for(i = 0; i < sorted.nLoadedPlayers; i++)
-  {
-    printf("%s %d\n", sorted.players[i].username, sorted.players[i].highScore);
-  }
-}
-
-/**
- * Display statistics interface
- */
-void displayStatistics()
-{
-  printf("View Statistics\n\t[1] Display Number of Wins\n\t[2] Display High Scores\n\t[0] Back to Main Menu\n");
-}
-
-/**
- * get user's input for statistics choice 
- */
-int getStatisticsChoice()
-{
-  int nChoice;
-  int valid;
-
-  displayStatistics();
-  printf("Enter option: ");
-  valid = scanf("%d", &nChoice);
-
-  while (valid != 1 || nChoice < 0 || nChoice > 2)
-  {
-    printf("Invalid input! Enter a number from 0 to 2: ");
-    while (getchar() != '\n'); 
-    valid = scanf("%d", &nChoice);
-  }
-  
-  return nChoice;
 }
 
 /******************************************************************************
