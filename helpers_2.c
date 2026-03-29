@@ -1,5 +1,10 @@
 /******************************************************************************
- *  Description     : <short description of the file>
+ *  Description     : This file contains utility functions used for randomization
+                       in the Mantis card game. It initializes the random number
+                       generator, produces random integers, and implements a 
+                       generic Fisher–Yates shuffle algorithm that can randomize 
+                       arrays of any data type (such as the deck of cards) using 
+                       a specified seed for reproducible shuffling.
  *  Author/s        : <De Guzman, Mavrick>
  *                    <Morin, Eliana>
  *  Section         : <S13A>
@@ -7,8 +12,8 @@
  *  Last Modified   : <date when last revision was made>
  ******************************************************************************/
 
-#ifndef HELPERS_2_C // Include this to prevent redefinition error
-#define HELPERS_2_C // Include this to prevent redefinition error
+#ifndef HELPERS_2_C 
+#define HELPERS_2_C 
 
 #include <stdio.h>
 #include <stdlib.h>
