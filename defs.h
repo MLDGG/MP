@@ -5,10 +5,10 @@
                        and basic utility structures such as coordinates and dates, 
                        allowing consistent data organization and sharing across 
                        multiple source files through modular programming.
- *  Author/s        : <student1 full name (last name, first name)>
- *                    <student2 full name (last name, first name)>
- *  Section         : <your section>
- *  Last Modified   : <date when last revision was made>
+ *  Author/s        : <De Guzman, Mavrick>
+ *                    <Morin, Eliana>
+ *  Section         : <S13A>
+ *  Last Modified   : <29/03/2026>
  ******************************************************************************/
 
 #ifndef DEFS_H // Include this to prevent redefinition error
